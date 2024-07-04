@@ -6,3 +6,5 @@ DerivedData/
 /.swiftpm
 .netrc
 
+
+Features.xcworkspace/xcshareddata/swiftpm/
