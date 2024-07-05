@@ -1,18 +1,23 @@
 @_exported import SwiftUI
 
+/// Body implementation of ``SharedFeature``
 public protocol SharedFeatureBody {
   associatedtype SharedFeatureBody: View
-  var sharedFeatureBody: SharedFeatureBody { get }
+  @ViewBuilder var sharedFeatureBody: SharedFeatureBody { get }
 }
 
+/// A type that represents featue in your app.
 public protocol Feature: View {
   associatedtype FeatureBody: View
-  var featureBody: FeatureBody { get }
+  @ViewBuilder var featureBody: FeatureBody { get }
 }
 
+/// А feature that can be used in different independent application modules.
+/// The feature body is implemented in one of the modules via the ``SharedFeatureBody`` protocol
 public protocol SharedFeature: Feature {
   associatedtype PlaceholderBody: View
-  var placeholderBody: PlaceholderBody { get }
+  /// The placeholder will be shown where the feature body is not available
+  @ViewBuilder var placeholderBody: PlaceholderBody { get }
 }
 
 extension Feature {
@@ -25,6 +30,7 @@ public extension SharedFeature {
   }
 }
 
+/// Modifier to configure global features behavior
 public struct FeatureModifier: ViewModifier {
 
   let file: StaticString
