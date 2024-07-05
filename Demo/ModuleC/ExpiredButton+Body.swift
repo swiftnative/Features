@@ -46,7 +46,7 @@ struct ExpiredButtonView: View {
     .opacity(model.expired ? 0.5 : 1)
     .animation(.default, value: model.expired)
     .onAppear {
-      model.startTimer(duration: .seconds(10))
+      model.startTimer(duration: 10)
     }
   }
 }
@@ -66,10 +66,10 @@ final class ExpiredButtonModel: ObservableObject {
     print("ExpiredButtonModel inited")
   }
 
-  func startTimer(duration: Duration) {
+  func startTimer(duration: Int) {
 
     timer?.cancel()
-    timeRemaining = Int(duration.components.seconds)
+    timeRemaining = duration
     timer = Timer.publish(every: 1.0, on: .main, in: .common)
       .autoconnect()
       .sink { [weak self] _ in

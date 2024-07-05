@@ -39,6 +39,7 @@ struct NodeId: LayoutValueKey {
     static var defaultValue: UUID? = nil
 }
 
+@available(iOS 16.0, *)
 extension View {
     func node(_ id: UUID, parentId: UUID?) -> some View {
         self
@@ -47,11 +48,13 @@ extension View {
     }
 }
 
+@available(iOS 16.0, *)
 extension LayoutSubview {
     var parentId: UUID? { self[ParentNodeId.self] }
     var nodeId: UUID? { self[NodeId.self] }
 }
 
+@available(iOS 16.0, *)
 struct TreeLayout: Layout {
     var nodeSeparation: CGFloat = 5
     var rowSeparation: CGFloat = 40
@@ -83,6 +86,7 @@ struct TreeLayout: Layout {
     }
 }
 
+@available(iOS 16.0, *)
 extension TreeLayout {
     func childViews(parentId: UUID?, subviews: LayoutSubviews) -> [LayoutSubview] {
         subviews.filter { $0.parentId == parentId }

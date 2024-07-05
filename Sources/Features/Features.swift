@@ -3,13 +3,13 @@
 /// Body implementation of ``SharedFeature``
 public protocol SharedFeatureBody {
   associatedtype SharedFeatureBody: View
-  @ViewBuilder var sharedFeatureBody: SharedFeatureBody { get }
+  @ViewBuilder var sharedFeatureBody: Self.SharedFeatureBody { get }
 }
 
 /// A type that represents featue in your app.
 public protocol Feature: View {
   associatedtype FeatureBody: View
-  @ViewBuilder var featureBody: FeatureBody { get }
+  @ViewBuilder @MainActor var featureBody: Self.FeatureBody { get }
 }
 
 /// А feature that can be used in different independent application modules.
@@ -17,7 +17,7 @@ public protocol Feature: View {
 public protocol SharedFeature: Feature {
   associatedtype PlaceholderBody: View
   /// The placeholder will be shown where the feature body is not available
-  @ViewBuilder var placeholderBody: PlaceholderBody { get }
+  @ViewBuilder @MainActor var placeholderBody: Self.PlaceholderBody { get }
 }
 
 extension Feature {

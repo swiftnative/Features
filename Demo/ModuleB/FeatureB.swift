@@ -9,11 +9,36 @@ import Features
 
 @Feature
 public struct FeatureB {
-  public init() {}
+  var text: String
+
+  public init() {
+    text = "Module B"
+  }
 
   public var featureBody: some View {
+    let view = SomeFeatureView(text: text) {
+      SomeModel(feature: self)
+    }
+    return view 
+  }
+}
+
+#Preview {
+  FeatureB()
+}
+
+struct SomeFeatureView: View {
+  var text: String
+  @StateObject private var model: SomeModel
+
+  init(text: String, model: @escaping () -> SomeModel) {
+    self.text = text
+    self._model = StateObject(wrappedValue: model())
+  }
+
+  var body: some View {
     VStack(spacing: 20) {
-      DependenciesGraph(selected: "Module B")
+      DependenciesGraph(selected: text)
 
       Text("Module **B** implement nothing")
 
@@ -26,6 +51,9 @@ public struct FeatureB {
   }
 }
 
-#Preview {
-  FeatureB()
+final class SomeModel: ObservableObject {
+  let feature: FeatureB
+  init(feature: FeatureB) {
+    self.feature = feature
+  }
 }

@@ -11,7 +11,11 @@ import Shared
 
 extension DependenciesGraph: SharedFeatureBody {
   public var sharedFeatureBody: some View {
-    DependenciesGraphView(selected: selected)
+    if #available(iOS 16.0, *) {
+      DependenciesGraphView(selected: selected)
+    } else {
+      Text("This feature only for ios 16")
+    }
   }
 }
 
@@ -30,7 +34,7 @@ enum Graph {
     return root
   }
 }
-
+@available(iOS 16.0, *)
 struct DependenciesGraphView: View {
   @State var nodeSeparation: CGFloat = 80.0
   @State var rowSeparation: CGFloat = 30.0
@@ -78,6 +82,8 @@ struct DependenciesGraphView: View {
 }
 
 #Preview {
-  DependenciesGraph(selected: "Module A")
-  Spacer()
+  VStack {
+    DependenciesGraph(selected: "Module A")
+    Spacer()
+  }
 }
