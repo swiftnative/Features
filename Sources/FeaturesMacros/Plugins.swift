@@ -9,6 +9,7 @@ import SwiftSyntaxMacros
 @main
 struct FeaturesPlugin: CompilerPlugin {
     let providingMacros: [Macro.Type] = [
-        SharedFeatureMacro.self
+        SharedFeatureMacro.self,
+        FeatureMacro.self
     ]
 }

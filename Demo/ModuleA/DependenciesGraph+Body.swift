@@ -9,8 +9,8 @@ import SwiftUI
 import Features
 import Shared
 
-extension DependenciesGraph: FeatureBody {
-  public var featureBody: some View {
+extension DependenciesGraph: SharedFeatureBody {
+  public var sharedFeatureBody: some View {
     DependenciesGraphView(selected: selected)
   }
 }

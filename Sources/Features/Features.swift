@@ -1,11 +1,13 @@
 @_exported import SwiftUI
 
-public protocol FeatureBody {
-  associatedtype FeatureBody: View
-  var featureBody: FeatureBody { get }
+public protocol SharedFeatureBody {
+  associatedtype SharedFeatureBody: View
+  var sharedFeatureBody: SharedFeatureBody { get }
 }
 
 public protocol Feature: View {
+  associatedtype FeatureBody: View
+  var featureBody: FeatureBody { get }
 }
 
 public protocol SharedFeature: Feature {
@@ -13,8 +15,8 @@ public protocol SharedFeature: Feature {
   var placeholderBody: PlaceholderBody { get }
 }
 
-public extension Feature {
-  static var typeID: String { "\(Self.self)" }
+extension Feature {
+  static var type: String { "\(Self.self)" }
 }
 
 public extension SharedFeature {
@@ -23,3 +25,23 @@ public extension SharedFeature {
   }
 }
 
+public struct FeatureModifier: ViewModifier {
+
+  let file: StaticString
+  let type: String
+
+  public init<F: Feature>(_ feature: F.Type, file: StaticString = #file) {
+    self.file = file
+    self.type = F.type
+  }
+
+  public func body(content: Content) -> some View {
+    content
+      .onAppear {
+        FeatureDelegate.current?.onAppear(type, file: file)
+      }
+      .onDisappear {
+        FeatureDelegate.current?.onDisappear(type, file: file)
+      }
+  }
+}

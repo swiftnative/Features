@@ -9,16 +9,23 @@ import Features
 import Observation
 import Combine
 
-extension ExpiredButton: FeatureBody {
+extension ExpiredButton: SharedFeatureBody {
 
-  public var featureBody: some View {
+  public var sharedFeatureBody: some View {
     ExpiredButtonView(feature: self)
   }
 }
 
 struct ExpiredButtonView: View {
   let feature: ExpiredButton
-  @State var model = ExpiredButtonModel()
+  @StateObject var model: ExpiredButtonModel
+
+  init(feature: ExpiredButton) {
+    self.feature = feature
+    print("ExpiredButtonView init")
+    // We use this initializer with @autoclusure to pass paramaeters to our Model
+    _model = StateObject(wrappedValue:  ExpiredButtonModel(feature: feature))
+  }
 
   var body: some View {
     Button(action: feature.action) {
@@ -44,18 +51,23 @@ struct ExpiredButtonView: View {
   }
 }
 
-@Observable
-final class ExpiredButtonModel {
+final class ExpiredButtonModel: ObservableObject {
 
-  var timeRemaining: Int = 0
+  @Published var timeRemaining: Int = 0
   var expired: Bool {
     timeRemaining == 0
   }
 
-  @ObservationIgnored
   private var timer: AnyCancellable?
 
+  let feature: ExpiredButton
+  init(feature: ExpiredButton) {
+    self.feature = feature
+    print("ExpiredButtonModel inited")
+  }
+
   func startTimer(duration: Duration) {
+
     timer?.cancel()
     timeRemaining = Int(duration.components.seconds)
     timer = Timer.publish(every: 1.0, on: .main, in: .common)
@@ -73,7 +85,5 @@ final class ExpiredButtonModel {
 }
 
 #Preview {
-  Shared.ExpiredButton(title: "It's button!",
-               logo: "birthday.cake",
-               action: {})
+  ExpiredButton(title: "It's button!")
 }

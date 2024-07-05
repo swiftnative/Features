@@ -7,6 +7,7 @@ import SwiftUI
 import Shared
 
 public struct FeatureC: View {
+  @State var buttonTitle: String = "Tap will change title"
   public init() {}
 
   public var body: some View {
@@ -15,9 +16,10 @@ public struct FeatureC: View {
 
       Text("Module **C** implement ExpiredButton")
 
-      ExpiredButton(title: "Tap now or never!",
-                    logo: "c.square",
-                    action: {})
+      ExpiredButton(title: buttonTitle,
+                    logo: "c.square") {
+        buttonTitle = "New title"
+      }
       Spacer()
     }
     .navigationTitle("Module C")

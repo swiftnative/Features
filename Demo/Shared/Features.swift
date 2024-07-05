@@ -13,8 +13,8 @@ public struct ExpiredButton {
   public let action: () -> Void
 
   public init(title: String,
-              logo: String,
-              action: @escaping () -> Void) {
+              logo: String = "birthday.cake",
+              action: @escaping () -> Void = {}) {
     self.title = title
     self.logo = logo
     self.action = action

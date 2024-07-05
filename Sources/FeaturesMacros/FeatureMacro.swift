@@ -3,7 +3,7 @@ import SwiftSyntax
 import SwiftSyntaxBuilder
 import SwiftSyntaxMacros
 
-public struct SharedFeatureMacro: ExtensionMacro {
+public struct FeatureMacro: ExtensionMacro {
   public static func expansion(
     of node: AttributeSyntax,
     attachedTo declaration: some DeclGroupSyntax,
@@ -11,11 +11,11 @@ public struct SharedFeatureMacro: ExtensionMacro {
     conformingTo protocols: [TypeSyntax],
     in context: some MacroExpansionContext
   ) throws -> [ExtensionDeclSyntax] {
-    [try ExtensionDeclSyntax("extension \(type): SharedFeature {}")]
+    [try ExtensionDeclSyntax("extension \(type): Feature {}")]
   }
 }
 
-extension SharedFeatureMacro: MemberMacro {
+extension FeatureMacro: MemberMacro {
 
   public static func expansion(
     of node: AttributeSyntax,
@@ -26,21 +26,10 @@ extension SharedFeatureMacro: MemberMacro {
       return []
     }
 
-    let featureBodyDecl: DeclSyntax =
-      """
-      public var featureBody: some View {
-        if let featureBody = self as? (any SharedFeatureBody) {
-          return AnyView(featureBody.sharedFeatureBody)
-        } else {
-          return AnyView(placeholderBody)
-        }
-      }
-      """
-
     let bodyDecl: DeclSyntax =
       """
       public var body: some View {
-        featureBody
+         featureBody
             .modifier(FeatureModifier(Self.self))
             .onAppear {
               FeatureDelegate.logger?.trace("+[\\(Self.self)]")
@@ -50,8 +39,8 @@ extension SharedFeatureMacro: MemberMacro {
             }
       }
       """
+
     return [
-      featureBodyDecl,
       bodyDecl
     ]
   }
