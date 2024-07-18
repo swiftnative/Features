@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4F94ECF72C38757E00CDE243 /* Features in Frameworks */ = {isa = PBXBuildFile; productRef = 4F94ECF62C38757E00CDE243 /* Features */; };
 		4FF827FF2C35729C00292F03 /* FeaturesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF827FE2C35729C00292F03 /* FeaturesApp.swift */; };
 		4FF828012C35729C00292F03 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF828002C35729C00292F03 /* ContentView.swift */; };
 		4FF828032C35729E00292F03 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FF828022C35729E00292F03 /* Assets.xcassets */; };
@@ -25,7 +26,6 @@
 		4FF828A12C36A19000292F03 /* Shared.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4FF828932C36A16400292F03 /* Shared.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4FF828A52C36A19500292F03 /* Shared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FF828932C36A16400292F03 /* Shared.framework */; };
 		4FF828A62C36A19500292F03 /* Shared.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4FF828932C36A16400292F03 /* Shared.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4FF828B02C36A1A300292F03 /* Features in Frameworks */ = {isa = PBXBuildFile; productRef = 4FF828AF2C36A1A300292F03 /* Features */; };
 		4FF828B22C36AC1900292F03 /* FeatureB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF828B12C36AC1900292F03 /* FeatureB.swift */; };
 		4FF828B62C36EC1100292F03 /* TreeLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF828B52C36EC1100292F03 /* TreeLayout.swift */; };
 		4FF828B72C36ED7000292F03 /* ModuleB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FF8284E2C3572CB00292F03 /* ModuleB.framework */; };
@@ -133,7 +133,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		4FF827FB2C35729C00292F03 /* DemoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DemoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4FF827FB2C35729C00292F03 /* App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = App.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FF827FE2C35729C00292F03 /* FeaturesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturesApp.swift; sourceTree = "<group>"; };
 		4FF828002C35729C00292F03 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		4FF828022C35729E00292F03 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -191,7 +191,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4FF828B02C36A1A300292F03 /* Features in Frameworks */,
+				4F94ECF72C38757E00CDE243 /* Features in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -201,7 +201,7 @@
 		4FF827F22C35729C00292F03 = {
 			isa = PBXGroup;
 			children = (
-				4FF827FD2C35729C00292F03 /* DemoApp */,
+				4FF827FD2C35729C00292F03 /* App */,
 				4FF8282E2C3572BB00292F03 /* ModuleA */,
 				4FF8284F2C3572CB00292F03 /* ModuleB */,
 				4FF8285F2C3572D800292F03 /* ModuleC */,
@@ -214,7 +214,7 @@
 		4FF827FC2C35729C00292F03 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				4FF827FB2C35729C00292F03 /* DemoApp.app */,
+				4FF827FB2C35729C00292F03 /* App.app */,
 				4FF8282D2C3572BA00292F03 /* ModuleA.framework */,
 				4FF8284E2C3572CB00292F03 /* ModuleB.framework */,
 				4FF8285E2C3572D800292F03 /* ModuleC.framework */,
@@ -223,14 +223,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		4FF827FD2C35729C00292F03 /* DemoApp */ = {
+		4FF827FD2C35729C00292F03 /* App */ = {
 			isa = PBXGroup;
 			children = (
 				4FF827FE2C35729C00292F03 /* FeaturesApp.swift */,
 				4FF828002C35729C00292F03 /* ContentView.swift */,
 				4FF828022C35729E00292F03 /* Assets.xcassets */,
 			);
-			path = DemoApp;
+			path = App;
 			sourceTree = "<group>";
 		};
 		4FF8282E2C3572BB00292F03 /* ModuleA */ = {
@@ -309,9 +309,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		4FF827FA2C35729C00292F03 /* DemoApp */ = {
+		4FF827FA2C35729C00292F03 /* App */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4FF8281F2C35729E00292F03 /* Build configuration list for PBXNativeTarget "DemoApp" */;
+			buildConfigurationList = 4FF8281F2C35729E00292F03 /* Build configuration list for PBXNativeTarget "App" */;
 			buildPhases = (
 				4FF827F72C35729C00292F03 /* Sources */,
 				4FF827F82C35729C00292F03 /* Frameworks */,
@@ -325,9 +325,9 @@
 				4FF828532C3572CB00292F03 /* PBXTargetDependency */,
 				4FF828632C3572D800292F03 /* PBXTargetDependency */,
 			);
-			name = DemoApp;
+			name = App;
 			productName = Features;
-			productReference = 4FF827FB2C35729C00292F03 /* DemoApp.app */;
+			productReference = 4FF827FB2C35729C00292F03 /* App.app */;
 			productType = "com.apple.product-type.application";
 		};
 		4FF8282C2C3572BA00292F03 /* ModuleA */ = {
@@ -411,7 +411,7 @@
 			);
 			name = Shared;
 			packageProductDependencies = (
-				4FF828AF2C36A1A300292F03 /* Features */,
+				4F94ECF62C38757E00CDE243 /* Features */,
 			);
 			productName = Domain;
 			productReference = 4FF828932C36A16400292F03 /* Shared.framework */;
@@ -448,7 +448,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 4FF827F62C35729C00292F03 /* Build configuration list for PBXProject "DemoApp" */;
+			buildConfigurationList = 4FF827F62C35729C00292F03 /* Build configuration list for PBXProject "SharedFeatures" */;
 			compatibilityVersion = "Xcode 15.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -461,7 +461,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				4FF827FA2C35729C00292F03 /* DemoApp */,
+				4FF827FA2C35729C00292F03 /* App */,
 				4FF8282C2C3572BA00292F03 /* ModuleA */,
 				4FF8284D2C3572CB00292F03 /* ModuleB */,
 				4FF8285D2C3572D800292F03 /* ModuleC */,
@@ -1112,7 +1112,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		4FF827F62C35729C00292F03 /* Build configuration list for PBXProject "DemoApp" */ = {
+		4FF827F62C35729C00292F03 /* Build configuration list for PBXProject "SharedFeatures" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4FF8281D2C35729E00292F03 /* Debug */,
@@ -1121,7 +1121,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4FF8281F2C35729E00292F03 /* Build configuration list for PBXNativeTarget "DemoApp" */ = {
+		4FF8281F2C35729E00292F03 /* Build configuration list for PBXNativeTarget "App" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4FF828202C35729E00292F03 /* Debug */,
@@ -1169,7 +1169,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		4FF828AF2C36A1A300292F03 /* Features */ = {
+		4F94ECF62C38757E00CDE243 /* Features */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Features;
 		};

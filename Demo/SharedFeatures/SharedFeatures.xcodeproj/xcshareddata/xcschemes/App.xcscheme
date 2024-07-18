@@ -16,9 +16,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "4FF827FA2C35729C00292F03"
-               BuildableName = "DemoApp.app"
-               BlueprintName = "DemoApp"
-               ReferencedContainer = "container:DemoApp.xcodeproj">
+               BuildableName = "App.app"
+               BlueprintName = "App"
+               ReferencedContainer = "container:SharedFeatures.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -38,7 +38,7 @@
                BlueprintIdentifier = "4FF8280A2C35729E00292F03"
                BuildableName = "FeaturesTests.xctest"
                BlueprintName = "FeaturesTests"
-               ReferencedContainer = "container:DemoApp.xcodeproj">
+               ReferencedContainer = "container:SharedFeatures.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -49,7 +49,7 @@
                BlueprintIdentifier = "4FF828142C35729E00292F03"
                BuildableName = "FeaturesUITests.xctest"
                BlueprintName = "FeaturesUITests"
-               ReferencedContainer = "container:DemoApp.xcodeproj">
+               ReferencedContainer = "container:SharedFeatures.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -60,7 +60,7 @@
                BlueprintIdentifier = "4FF828332C3572BB00292F03"
                BuildableName = "FeatureATests.xctest"
                BlueprintName = "FeatureATests"
-               ReferencedContainer = "container:DemoApp.xcodeproj">
+               ReferencedContainer = "container:SharedFeatures.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -80,9 +80,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "4FF827FA2C35729C00292F03"
-            BuildableName = "DemoApp.app"
-            BlueprintName = "DemoApp"
-            ReferencedContainer = "container:DemoApp.xcodeproj">
+            BuildableName = "App.app"
+            BlueprintName = "App"
+            ReferencedContainer = "container:SharedFeatures.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -97,9 +97,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "4FF827FA2C35729C00292F03"
-            BuildableName = "DemoApp.app"
-            BlueprintName = "DemoApp"
-            ReferencedContainer = "container:DemoApp.xcodeproj">
+            BuildableName = "App.app"
+            BlueprintName = "App"
+            ReferencedContainer = "container:SharedFeatures.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

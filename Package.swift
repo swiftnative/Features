@@ -7,8 +7,8 @@ import CompilerPluginSupport
 let package = Package(
   name: "Features",
   platforms: [
-    .macOS(.v11),
-    .iOS(.v14),
+    .macOS(.v14),
+    .iOS(.v15),
     .tvOS(.v13),
     .watchOS(.v6),
     .macCatalyst(.v13)],
@@ -16,6 +16,10 @@ let package = Package(
     .library(
       name: "Features",
       targets: ["Features"]
+    ),
+    .library(
+      name: "FeaturesDomain",
+      targets: ["FeaturesDomain"]
     )
   ],
   dependencies: [
@@ -29,7 +33,8 @@ let package = Package(
         .product(name: "SwiftCompilerPlugin", package: "swift-syntax")
       ]
     ),
-    .target(name: "Features", dependencies: ["FeaturesMacros"]),
+    .target(name: "FeaturesDomain"),
+    .target(name: "Features", dependencies: ["FeaturesDomain","FeaturesMacros"]),
     .testTarget(
       name: "FeaturesTests",
       dependencies: [

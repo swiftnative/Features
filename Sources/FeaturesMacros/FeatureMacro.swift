@@ -30,7 +30,7 @@ extension FeatureMacro: MemberMacro {
       """
       public var body: some View {
          featureBody
-            .modifier(FeatureModifier(Self.self))
+            .modifier(FeatureModifier(Self.self, featureID: featureID))
             .onAppear {
               FeatureDelegate.logger?.trace("+[\\(Self.self)]")
             }
