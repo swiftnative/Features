@@ -9,8 +9,8 @@ import SwiftUI
 import Features
 import Shared
 
-extension DependenciesGraph: SharedFeatureBody {
-  public var sharedFeatureBody: some View {
+extension DependenciesGraph: SharedscreenBody {
+  public var sharedscreenBody: some View {
     if #available(iOS 16.0, *) {
       DependenciesGraphView(selected: selected)
     } else {

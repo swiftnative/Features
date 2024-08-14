@@ -9,9 +9,11 @@ import SwiftUI
 import ModuleA
 import ModuleB
 import ModuleC
+import Features
 
+@Screen
 struct ContentView: View {
-  var body: some View {
+  var screenBody: some View {
 
     TabView {
       NavigationView {

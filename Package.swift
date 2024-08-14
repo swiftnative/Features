@@ -5,7 +5,7 @@ import PackageDescription
 import CompilerPluginSupport
 
 let package = Package(
-  name: "Features",
+  name: "Screens",
   platforms: [
     .macOS(.v14),
     .iOS(.v15),
@@ -18,8 +18,12 @@ let package = Package(
       targets: ["Features"]
     ),
     .library(
-      name: "FeaturesDomain",
-      targets: ["FeaturesDomain"]
+      name: "BrowserMessages",
+      targets: ["BrowserMessages"]
+    ),
+    .executable(
+        name: "ScreensClient",
+        targets: ["ScreensClient"]
     )
   ],
   dependencies: [
@@ -27,18 +31,30 @@ let package = Package(
   ],
   targets: [
     .macro(
-      name: "FeaturesMacros",
+      name: "ScreensMacros",
       dependencies: [
         .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
         .product(name: "SwiftCompilerPlugin", package: "swift-syntax")
-      ]
+      ],
+      path: "Sources/ScreensMacros"
     ),
-    .target(name: "FeaturesDomain"),
-    .target(name: "Features", dependencies: ["FeaturesDomain","FeaturesMacros"]),
+    .target(name: "BrowserMessages",
+            path: "Sources/BrowserMessages"),
+
+    .target(name: "Features",
+            dependencies: ["BrowserMessages", "ScreensMacros", "Notifications"],
+            path: "Sources/Screens"),
+
+    .target(name: "Notifications",
+            path: "Sources/Notifications"),
+
+    .executableTarget(name: "ScreensClient",
+                      dependencies: ["Features"],
+                      path: "Sources/ScreensClient"),
     .testTarget(
-      name: "FeaturesTests",
+      name: "ScreensTests",
       dependencies: [
-        "FeaturesMacros",
+        "ScreensMacros",
         .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax"),
       ]
     ),

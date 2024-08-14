@@ -5,12 +5,14 @@
 
 import SwiftUI
 import Shared
+import Features
 
+@Screen
 public struct FeatureC: View {
   @State var buttonTitle: String = "Tap will change title"
   public init() {}
 
-  public var body: some View {
+  public var screenBody: some View {
     VStack(spacing: 20) {
       DependenciesGraph(selected: "Module C")
 

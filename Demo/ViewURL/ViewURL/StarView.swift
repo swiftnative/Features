@@ -6,8 +6,26 @@
 import SwiftUI
 import Features
 
-@Feature
+@Screen
 struct StarView: View {
+  @State var someBool = false
+
+  var screenBody: some View {
+    Group {
+      if someBool {
+        ProxyView()
+      } else {
+        Button(action: {
+          someBool.toggle()
+        }) {
+          Text("Show Content")
+        }
+      }
+    }
+  }
+}
+
+struct ProxyView: View {
   @State var isSheetPresented  = false
   @State var current: String = ""
 
@@ -18,7 +36,7 @@ struct StarView: View {
     "feature://app/home[tab=0]/feature-with-id[id=1]",
   ]
 
-  var featureBody: some View {
+  var body: some View {
     NavigationStack {
       
       VStack(alignment: .leading, spacing: 10) {
@@ -63,29 +81,6 @@ struct StarView: View {
       .navigationTitle(Text("is URL Valid?"))
       .multilineTextAlignment(.leading)
       .padding()
-        .toolbar {
-
-          ToolbarItem(placement: .automatic) {
-            NavigationLink {
-              VStack {
-                Feature1()
-                Feature2()
-              }
-            } label: {
-              Text("Feature1")
-            }
-          }
-
-          ToolbarItem(placement: .automatic) {
-            Button("Sheet") {
-              isSheetPresented.toggle()
-            }
-          }
-
-        }
-        .sheet(isPresented: $isSheetPresented) {
-          Feature1()
-        }
     }
   }
 }

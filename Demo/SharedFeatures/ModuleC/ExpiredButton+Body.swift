@@ -9,9 +9,9 @@ import Features
 import Observation
 import Combine
 
-extension ExpiredButton: SharedFeatureBody {
+extension ExpiredButton: SharedscreenBody {
 
-  public var sharedFeatureBody: some View {
+  public var sharedscreenBody: some View {
     ExpiredButtonView(feature: self)
   }
 }

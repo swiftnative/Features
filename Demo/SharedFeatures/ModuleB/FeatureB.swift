@@ -7,7 +7,7 @@ import SwiftUI
 import Shared
 import Features
 
-@Feature
+@Screen
 public struct FeatureB {
   var text: String
 
@@ -15,7 +15,7 @@ public struct FeatureB {
     text = "Module B"
   }
 
-  public var featureBody: some View {
+  public var screenBody: some View {
     let view = SomeFeatureView(text: text) {
       SomeModel(feature: self)
     }

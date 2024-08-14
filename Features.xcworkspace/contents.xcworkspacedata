@@ -5,12 +5,12 @@
       location = "self:">
    </FileRef>
    <FileRef
-      location = "group:Demo/SharedFeatures/SharedFeatures.xcodeproj">
+      location = "group:Demo/SharedFeatures/DemoSharedView.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:Demo/ViewURL/ViewURL.xcodeproj">
+      location = "group:Demo/ViewURL/DemoScreens.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:../FeatureBrowser/FeatureBrowser.xcodeproj">
+      location = "group:../AppBrowser/AppBrowser.xcodeproj">
    </FileRef>
 </Workspace>

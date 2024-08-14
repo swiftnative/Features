@@ -6,12 +6,16 @@
 //
 
 import SwiftUI
+import Features
 
 @main
 struct FeaturesApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+            .onAppear {
+              Screens.shared.connect()
+            }
         }
     }
 }

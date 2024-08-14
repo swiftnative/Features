@@ -5,11 +5,13 @@
 
 import SwiftUI
 import Shared
+import Features
 
+@Screen
 public struct FeatureA: View {
   public init() {}
 
-  public var body: some View {
+  public var screenBody: some View {
     VStack(spacing: 20) {
       DependenciesGraph(selected: "Module A")
 
