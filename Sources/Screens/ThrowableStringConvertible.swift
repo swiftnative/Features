@@ -10,13 +10,13 @@ public protocol ThrowableStringConvertible {
 }
 
 enum ConversionError: Error, CustomStringConvertible {
-  case invalidFormat
+  case invalidFormat(type: String, value: String)
   case noValue(forKey: String)
 
   var description: String {
     switch self {
-    case .invalidFormat:
-      return "Invalid format"
+    case let .invalidFormat(type, value):
+      return "Can't convert string '\(value)' to \(type)"
     case .noValue(forKey: let key):
       return "No value for key: \(key)"
     }
@@ -26,7 +26,7 @@ enum ConversionError: Error, CustomStringConvertible {
 extension Int: ThrowableStringConvertible {
   public init(from string: String) throws {
     guard let value = Int(string) else {
-      throw ConversionError.invalidFormat
+      throw ConversionError.invalidFormat(type: "Int", value: string)
     }
     self = value
   }
@@ -35,7 +35,7 @@ extension Int: ThrowableStringConvertible {
 extension Double: ThrowableStringConvertible {
   public init(from string: String) throws {
     guard let value = Double(string) else {
-      throw ConversionError.invalidFormat
+      throw ConversionError.invalidFormat(type: "Double", value: string)
     }
     self = value
   }
@@ -44,7 +44,7 @@ extension Double: ThrowableStringConvertible {
 extension Bool: ThrowableStringConvertible {
   public init(from string: String) throws {
     guard let value = Bool(string) else {
-      throw ConversionError.invalidFormat
+      throw ConversionError.invalidFormat(type: "Bool", value: string)
     }
     self = value
   }
