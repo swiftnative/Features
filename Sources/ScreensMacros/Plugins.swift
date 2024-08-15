@@ -10,8 +10,6 @@ import SwiftSyntaxMacros
 struct ScreensPlugin: CompilerPlugin {
     let providingMacros: [Macro.Type] = [
         SharedViewMacro.self,
-        ScreenMacro.self,
-        SharedFeatureMacro.self,
-        FeatureMacro.self
+        ScreenMacro.self
     ]
 }

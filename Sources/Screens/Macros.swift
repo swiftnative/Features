@@ -17,13 +17,3 @@ public macro Screen(alias: String? = nil, path: String? = nil, params: String...
 //public macro Widget() = #externalMacro(module: "ScreensMacros", type: "WidgetMacro")
 
 #endif
-
-@attached(member, names: named(body), named(featureBody))
-@attached(extension, conformances: SharedFeature)
-@available(*, deprecated, renamed: "SharedView")
-public macro SharedFeature() = #externalMacro(module: "ScreensMacros", type: "SharedFeatureMacro")
-
-@attached(member, names: named(body))
-@attached(extension, conformances: Feature)
-@available(*, deprecated, message: "Use Screen Macro for screens")
-public macro Feature() = #externalMacro(module: "ScreensMacros", type: "FeatureMacro")
