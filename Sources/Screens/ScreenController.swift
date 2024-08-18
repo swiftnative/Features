@@ -11,23 +11,33 @@ import Combine
 
 public final class ScreenController: UIViewController, ObservableObject {
   typealias Dismiss = () -> Void
-  public let id: ScreenID = ScreenID()
+  public let id: ScreenID = .newScreenID
   public let staticID: ScreenStaticID
   let alias: String?
   var tag: ScreenTag?
   public var parentScreenID: ScreenID?
   var state: ScreenState
   private var isFirstAppear: Bool = true
-  var environmentID: UUID!
-  var dismissAction: DismissAction?
+  private var isPresented: Bool { presentingViewController != nil }
+  var dismissAction: DismissAction? { environment.dismiss }
   var info: String = ""
-  var stack: NodeStackInfo?
+  var stack: NavigationStackInfo?
+  var hasInnerNavigationDestination: Bool = false
 
-  let logger = Logger(subsystem: "com.example.MyViewController", category: "MyViewController")
+  let logger = Logger(subsystem: "screens", category: "screens")
 
-  private var screens: Screens { Screens.shared }
+  var screens: Screens { Screens.shared }
+  
 
   public internal(set) var environment: EnvironmentValues = EnvironmentValues()
+
+  var environmentInfo: EnvironmentInfo {
+    EnvironmentInfo(isPresented: environment.isPresented)
+  }
+
+  var preferencesInfo: PreferencesInfo {
+    PreferencesInfo(innerNaigationDestination: hasInnerNavigationDestination)
+  }
 
   init(staticID: ScreenStaticID, alias: String?) {
     self.staticID = staticID
@@ -43,18 +53,10 @@ public final class ScreenController: UIViewController, ObservableObject {
 
   private(set) var childrenScreens: [ScreenID] = []
 
-  func onAppear(parentScreenID: UUID, isPresented: Bool, dismiss: DismissAction?) {
-    self.parentScreenID = parentScreenID == .zero ? nil : parentScreenID
-    self.dismissAction = dismiss
-    self.state.isAppeared = true
-    self.state.environemntIsPresented = isPresented
-    if isFirstAppear {
-      isFirstAppear = false
-      self.state.onApperPresented = isPresented
-      screens.screen(created: self)
-    } else {
-      screens.screen(stateUpdated: self)
-    }
+  func onAppear(environment: EnvironmentValues) {
+    logger.debug("[\(self.logID)] onAppear")
+    self.parentScreenID = environment.screenID == .zero ? nil : environment.screenID
+    self.environment = environment
   }
 
   func screenshot() {
@@ -70,24 +72,22 @@ public final class ScreenController: UIViewController, ObservableObject {
   }
 
   func onDissappear() {
-    self.state.isAppeared = false
-    screens.screen(stateUpdated: self)
+    logger.debug("[\(self.logID)] onDissappear")
   }
 
-  func onIsPresentedChanged(isPresented: Bool, dismiss: DismissAction?) {
-    logger.debug("[\(self.id)] onIsPresentedChanged \(isPresented)")
-    self.state.environemntIsPresented = isPresented
-    self.dismissAction = dismiss
+  func onIsPresentedChanged(environment: EnvironmentValues) {
+    logger.debug("[\(self.logID)] onIsPresentedChanged \(environment.isPresented)")
+    self.environment = environment
     screens.screen(stateUpdated: self)
   }
 
   public override func viewDidLoad() {
     super.viewDidLoad()
-    logger.debug("[\(self.id)] viewDidLoad")
+    logger.debug("[\(self.logID)] viewDidLoad")
   }
 
   public func dismiss() {
-    if state.environemntIsPresented {
+    if environment.isPresented {
       dismissAction?()
     } else {
       self.dismiss(animated: true)
@@ -95,35 +95,49 @@ public final class ScreenController: UIViewController, ObservableObject {
   }
 
   deinit {
-    logger.debug("[\(self.id)] deinit")
+    logger.debug("[\(self.logID)] deinit")
     screens.screen(removed: id)
   }
 
   public override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
-    state.lastAppeared = CFAbsoluteTimeGetCurrent()
-    state.isPresented = presentingViewController != nil
+    logger.debug("[\(self.logID)] viewDidAppear")
+    guard state.isAppeared == false else { return }
+
+    state.isAppeared = true
+    state.isPresented = isPresented
+
+    if isFirstAppear {
+      isFirstAppear = false
+      screens.screen(created: self)
+    }
+    screens.screen(kind: .didAppear, for: self)
     update()
     screens.screen(stateUpdated: self)
     screenshot()
-    logger.debug("[\(self.id)] viewDidAppear")
   }
 
   public override func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
-    logger.debug("[\(self.id)] viewDidDisappear")
+    logger.debug("[\(self.logID)] viewDidDisappear")
+    self.state.isAppeared = false
+    screens.screen(kind: .didDisappear, for: self)
+    screens.screen(stateUpdated: self)
   }
-
 
   public override func didMove(toParent parent: UIViewController?) {
     super.didMove(toParent: parent)
-    logger.debug("[\(self.id)] didMove \(parent)")
+    logger.debug("[\(self.logID)] didMove to:\(parent)")
     update()
     screens.screen(stateUpdated: self)
   }
 
   public override var debugDescription: String {
-    "\(self)[\(staticID.type)-\(id.uuidString.prefix(5))]"
+    "\(self)[\(staticID.type)-\(id)]"
+  }
+
+  var logID: String {
+    "\(staticID.type)-\(id)"
   }
 }
 
@@ -131,11 +145,11 @@ public final class ScreenController: UIViewController, ObservableObject {
 extension ScreenController {
 
   var nodeDebugName: String {
-    "[\(id.uuidString.prefix(5))]"
+    "[\(id)]"
   }
 
   var nodeDebugDescription: String {
-    "\(nodeDebugName) \(state) parent:\(parentScreenID?.uuidString.prefix(5) ?? "")"
+    "\(nodeDebugName) \(state) parent:\(parentScreenID?.description ?? "")"
   }
 
   var dto: ScreenLiveInfo {
@@ -144,18 +158,30 @@ extension ScreenController {
                    alias: alias,
                    tag: tag,
                    parentScreenID: parentScreenID,
+                   hasParentVC: parent != nil,
                    state:  state,
                    size: ScreeSize(size: parent?.view.frame.size ?? view.frame.size),
                    stack: stack,
                    children: childrenScreens,
+                   environment: environmentInfo,
+                   preferences: preferencesInfo,
                    info: info)
   }
 
   func fillStackInfo() {
-    guard let navigationController, let parent else { return  }
 
-    let index = navigationController.viewControllers.firstIndex(of: parent) ?? -1
-    self.stack = NodeStackInfo(stackID: navigationController.vcID, index: index)
+    if let outerNC, let parent {
+      let index = outerNC.viewControllers.firstIndex(of: parent) ?? -1
+      self.stack = NavigationStackInfo(stackID: outerNC.vcID,
+                                       index: index,
+                                       kind: .outer)
+    } else if let innerNC {
+      self.stack = NavigationStackInfo(stackID: innerNC.vcID,
+                                       index: 0,
+                                       kind: .inner)
+    } else {
+      self.stack = nil
+    }
   }
 
   func fillInfo() {

@@ -5,6 +5,8 @@
 
 import Foundation
 import os
+import UIKit
+import BrowserMessages
 
 /// Global delegate for all features
 public protocol ScreensDelegate {
@@ -16,15 +18,17 @@ public protocol ScreensDelegate {
 
   func action<S: Screen>(_ action: ScreenAction, screen: S, params: ScreenAction.Params?)
 
+  func event(event: ScreenEvent)
+
 }
 
 public extension ScreensDelegate {
 
   var `default`: ScreensDelegate { Screens.shared }
 
-  var screens: [any Screen.Type] {
-    []
-  }
+  var screens: [any Screen.Type] { [] }
+
+  func event(event: ScreenEvent) {}
 
   func open(url open: ScreenURL) {
     if open.path == nil || open.path == EmptyScreen.path {
@@ -38,7 +42,8 @@ public extension ScreensDelegate {
 
     open(by: decodableScreen)
   }
-  
+
+
   func didFailToOpen(url: ScreenURL, error: any Error) {
     print("Failed to open: \(url), error: \(error)")
   }

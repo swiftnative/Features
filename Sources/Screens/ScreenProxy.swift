@@ -13,7 +13,7 @@ public protocol ScreenProxy {
   /// Equal to Envronment(\.dismiss), one step back in stack or dismiss presented view
   func dismiss()
   /// Push to NavaigationController
-  func push<S: Screen>(_ screen: S)
+  func push<S: Screen, M: ViewModifier>(_ screen: S, modifier: M)
   /// Apply modifier before fullscreen
   func fullscreen<S: Screen, M: ViewModifier>(_ screen: S, modifier: M)
   /// Present Sheet
@@ -44,6 +44,11 @@ public extension ScreenProxy {
   /// Present Fullscreen
   func fullscreen<S>(_ screen: S) where S : Screen {
     fullscreen(screen, modifier: EmptyModifier())
+  }
+
+  /// Push
+  func push<S>(_ screen: S) where S : Screen {
+    push(screen, modifier: EmptyModifier())
   }
 }
 

@@ -34,9 +34,19 @@ public extension AppInfo {
 
     info.bundleID = Bundle.main.bundleIdentifier ?? ""
     info.name = Bundle.main.infoDictionary?["CFBundleName"] as? String ?? ""
-    let image = UIImage(systemName: "wifi")
-    info.logo = image?.jpegData(compressionQuality: 1)
+    
+    if let image = getCurrentAppIcon() {
+      info.logo = image.jpegData(compressionQuality: 1)
+    }
     return info
+  }
+
+  static func getCurrentAppIcon() -> UIImage? {
+    guard let iconsDictionary = Bundle.main.infoDictionary?["CFBundleIcons"] as? [String:Any],
+    let primaryIconsDictionary = iconsDictionary["CFBundlePrimaryIcon"] as? [String:Any],
+    let iconFiles = primaryIconsDictionary["CFBundleIconFiles"] as? [String],
+    let lastIcon = iconFiles.last else { return nil }
+    return UIImage(named: lastIcon)
   }
 }
 #endif

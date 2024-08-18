@@ -42,7 +42,7 @@ struct SongView {
   }
 
   var screenBody: some View {
-    NavigationStack {
+    ScreenStack {
       if song == .empty {
         Text("Song not found")
       } else {
@@ -61,6 +61,7 @@ struct SongView {
         .padding()
         .background(color.opacity(0.2))
         .navigationTitle(song.title)
+        .screenNavigationDestination
       }
     }
     .screen(tag: song.title)

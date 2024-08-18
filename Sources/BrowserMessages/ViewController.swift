@@ -77,7 +77,7 @@ public final class ViewController: Codable, Hashable {
 extension ViewController: CustomDebugStringConvertible {
   public var debugDescription: String {
     if let screenType, let screenID {
-      return "\(screenType)-\(screenID.uuidString.prefix(5))"
+      return "\(screenType)-\(screenID)"
     } else {
       return type
     }

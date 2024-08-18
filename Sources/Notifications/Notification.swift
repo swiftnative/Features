@@ -60,7 +60,6 @@ func log(_ message: String) {
 }
 
 // MARK: Public Extensions
-
 public extension Notification.Name {
   func subscribe(receiveValue: @escaping (Notification) -> Void) -> AnyCancellable {
     NotificationCenter.default.publisher(for: self, object: nil).sink(receiveValue: receiveValue)
@@ -110,7 +109,6 @@ extension View {
     onReceive(notification.publisher, perform: action)
   }
 }
-
 
 extension Notification {
     struct Log: PayloadNotification {

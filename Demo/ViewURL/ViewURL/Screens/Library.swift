@@ -16,54 +16,65 @@ struct LibraryView {
   @State var nativeSheet = false
 
   var screenBody: some View {
-    NavigationView {
-      if searchText.isEmpty {
-        List {
-          NavigationLink("Info") {
-            InfoScreen()
-          }
+    NavigationStack{
+      Group {
+        if searchText.isEmpty {
+          List {
+            NavigationLink("Info") {
+              InfoScreen()
+            }
 
-          Button("fullscreen") {
-            Screens.current.fullscreen(InfoScreen(), modifier: .closeButton)
-          }
+            Button("fullscreen") {
+              Screens.current.fullscreen(InfoScreen(), modifier: .closeButton)
+            }
 
-          Button("fullscreen-action") {
-            Screens.action(.fullscreen, screen: InfoScreen())
-          }
+            Button("fullscreen-action") {
+              Screens.action(.fullscreen, screen: InfoScreen())
+            }
 
-          Button("Sheet-Info") {
-            Screens.current.sheet(InfoScreen(), modifier: .closeButton)
-          }
+            Button("Sheet-Info") {
+              Screens.current.sheet(InfoScreen(), modifier: .closeButton)
+            }
 
-          Button("Sheet-Song") {
-            Screens.current.sheet(SongView(song: .duHast), modifier: .closeButton)
-          }
-          Button("Native Sheet") {
-            nativeSheet.toggle()
-          }
+            NavigationLink("Song") {
+              SongView(song: .duHast)
+            }
 
-          Section("Green") {
-            SongListView(songs: [.duHast, .someSong])
-          }
-          .environment(\.color, .green)
+            Button("Push-Song") {
+              Screens.current.push(SongView(song: .duHast))
+            }
 
-          Section("Red") {
-            SongListView(songs: [.elPoblema])
-          }
-          .environment(\.color, .red)
+            Button("Sheet-Song") {
+              Screens.current.sheet(SongView(song: .duHast), modifier: .closeButton)
+            }
+            Button("Native Sheet") {
+              nativeSheet.toggle()
+            }
 
-          Section("Blue") {
-            SongListView(songs: app.all.filter { $0.author == .morgenstern })
+            Section("Green") {
+              SongListView(songs: [.duHast, .someSong])
+            }
+            .environment(\.color, .green)
+
+            Section("Red") {
+              SongListView(songs: [.elPoblema])
+            }
+            .environment(\.color, .red)
+
+            Section("Blue") {
+              SongListView(songs: app.all.filter { $0.author == .morgenstern })
+            }
+            .environment(\.color, .blue)
           }
-          .environment(\.color, .blue)
+          .searchable(text: $searchText, prompt: "Search")
+          .sheet(isPresented: $nativeSheet, content: {
+            SongView(song: .duHast)
+          })
+        } else {
+          SearchScreen(searchText: $searchText)
         }
-        .searchable(text: $searchText, prompt: "Search")
-        .sheet(isPresented: $nativeSheet, content: {
-          SongView(song: .duHast)
-        })
-      } else {
-        SearchScreen(searchText: $searchText)
       }
+      .screenNavigationDestination
     }
 
   }

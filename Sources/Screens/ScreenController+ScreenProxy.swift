@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import BrowserMessages
 
 extension ScreenController: ScreenProxy {
 
@@ -14,17 +15,46 @@ extension ScreenController: ScreenProxy {
     self.environment[keyPath: keyPath] = value
   }
 
-  public func push<S>(_ screen: S) where S : Screen {
-    guard let nc = outerNC ?? innerNC else { return }
+  public func push<S, M>(_ screen: S, modifier: M) where S : Screen, M : ViewModifier {
+    screens.screen(kind: .willPush(S.screenID), for: self)
+
+    var stackKind: StackKind?
+
+    if outerNC != nil {
+      stackKind = .outer
+    } else if innerNC != nil {
+      stackKind = .inner
+    }
+    
+    guard let stackKind else {
+      logger.error("[\(self.logID)] Cannot push screen \(S.self). No stack .")
+      screens.screen(error: "[\(self.logID)] Cannot push screen \(S.self). No stack .")
+      return
+    }
+
+    if stackKind == .inner &&  hasInnerNavigationDestination == false  {
+      logger.error("[\(self.logID)] Has inner stack, but no screenNavigationDestination. Cannot push screen \(S.self).")
+      screens.screen(error: "[\(self.logID)] Has inner stack, but no screenNavigationDestination. Cannot push screen \(S.self).")
+      return
+    }
 
     let rootView = screen
+      .modifier(modifier)
 
-    let host = UIHostingController(rootView: rootView)
-    nc.pushViewController(host, animated: true)
+    Notification.PushScreenNotification.post(.init(screen: AnyView(rootView),
+                                             kind: stackKind,
+                                             stackHolder: id))
+//    stack.pushViewController(UIHostingController(rootView: AnyView(rootView)), animated: true)
   }
 
   public func fullscreen<S, M>(_ screen: S, modifier: M) where S : Screen, M : ViewModifier {
-    guard let parent else { return }
+    screens.screen(kind: .willFullscreen(S.screenID), for: self)
+
+    guard let parent else {
+      logger.error("[\(self.logID)] Cannot present fullscreen screen \(S.self). Parent view controller is nil.")
+      screens.screen(error: "[\(self.logID)] Cannot present fullscreen screen \(S.self). Parent view controller is nil.")
+      return
+    }
 
     let rootView = screen
       .modifier(modifier)
@@ -34,11 +64,16 @@ extension ScreenController: ScreenProxy {
     let vc = ScreensPresentationHostingController(rootView: rootView)
     vc.modalPresentationStyle = .fullScreen
     parent.present(vc, animated: true)
-
   }
 
   public func sheet<S, M>(_ screen: S, modifier: M, configurate: (UISheetPresentationController) -> Void) where S : Screen, M : ViewModifier  {
-    guard let parent else { return }
+    screens.screen(kind: .willSheet(S.screenID), for: self)
+
+    guard let parent else {
+      logger.error("[\(self.logID)] Cannot present sheet screen \(S.self). Parent view controller is nil.")
+      screens.screen(error: "[\(self.logID)] Cannot present sheet screen \(S.self). Parent view controller is nil.")
+      return
+    }
     let rootView = screen
       .modifier(modifier)
       .environment(\.screenID, id)
@@ -48,7 +83,6 @@ extension ScreenController: ScreenProxy {
     if let sheet = vc.sheetPresentationController {
       configurate(sheet)
     }
-    logger.debug("[\(self.id)] sheet parent:\(parent.vcID) parent.isViewLoaded: \(parent.isViewLoaded)")
     DispatchQueue.main.async {
       parent.present(vc, animated: true)
     }

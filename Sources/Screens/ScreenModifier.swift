@@ -20,19 +20,20 @@ public struct ScreenModifier: ViewModifier {
 
   public func body(content: Content) -> some View {
     content
+      .onPreferenceChange(ScreenNavigationDestinationPreferenceKey.self, perform: { [weak controller] value in
+        controller?.hasInnerNavigationDestination = value
+      })
+      .modifier(NavigationStackModifier(kind: .outer))
       .environment(\.screenID, controller.id)
       .onAppear { [weak controller] in
-        controller?.onAppear(parentScreenID: parentScreenID,
-                             isPresented: isPresented,
-                             dismiss: dismiss)
-        controller?.environment = environment
+        controller?.onAppear(environment: environment)
       }
       .onDisappear { [weak controller] in
         controller?.onDissappear()
       }
-      .onChange(of: isPresented) { [weak controller] in
-        controller?.onIsPresentedChanged(isPresented: $0, dismiss: dismiss)
-      }
+      .onChange(of: isPresented, perform: { [weak controller] _ in
+        controller?.onIsPresentedChanged(environment: environment)
+      })
       .background {
         ViewControllerAccessor(controller: controller)
       }
@@ -51,7 +52,7 @@ private struct ViewControllerAccessor: UIViewControllerRepresentable {
 }
 
 struct ParentScreenIDKey : EnvironmentKey {
-  static var defaultValue: UUID = .zero
+  static var defaultValue: ScreenID = .zero
 }
 
 public extension EnvironmentValues {

@@ -13,6 +13,7 @@
 		4F0221E12C5A7A62009EA375 /* Login.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0221E02C5A7A62009EA375 /* Login.swift */; };
 		4F0221E42C5A7BE4009EA375 /* ChoseTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0221E32C5A7BE4009EA375 /* ChoseTheme.swift */; };
 		4F0221E62C5A857C009EA375 /* SongListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0221E52C5A857C009EA375 /* SongListView.swift */; };
+		4F124F7E2C7024D30076FADC /* Features in Frameworks */ = {isa = PBXBuildFile; productRef = 4F124F7D2C7024D30076FADC /* Features */; };
 		4F8C89842C3D814200036416 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8C89832C3D814200036416 /* Settings.swift */; };
 		4F94ED052C38765800CDE243 /* MusicApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F94ED042C38765800CDE243 /* MusicApp.swift */; };
 		4F94ED072C38765800CDE243 /* Library.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F94ED062C38765800CDE243 /* Library.swift */; };
@@ -57,6 +58,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4FFC71C22C5C04B500586EF6 /* Features in Frameworks */,
+				4F124F7E2C7024D30076FADC /* Features in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -147,6 +149,7 @@
 			name = DemoScreens;
 			packageProductDependencies = (
 				4FFC71C12C5C04B500586EF6 /* Features */,
+				4F124F7D2C7024D30076FADC /* Features */,
 			);
 			productName = ViewURL;
 			productReference = 4F94ED012C38765800CDE243 /* DemoScreens.app */;
@@ -362,7 +365,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -393,7 +396,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -431,6 +434,10 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		4F124F7D2C7024D30076FADC /* Features */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Features;
+		};
 		4FFC71C12C5C04B500586EF6 /* Features */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Features;

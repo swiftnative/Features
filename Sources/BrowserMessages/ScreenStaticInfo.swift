@@ -26,9 +26,13 @@ public struct ScreenStaticInfo: Hashable, Codable, Identifiable {
   }
 }
 
-public struct ScreenStaticID: Hashable, Codable {
+public struct ScreenStaticID: Hashable, Codable, CustomStringConvertible {
   public let type: String
   public let file: String
+
+  public var description: String {
+    type
+  }
 
   public init(type: String, file: StaticString = #file) {
     self.type = type

@@ -49,7 +49,7 @@ extension ScreenMacro: MemberMacro {
           alias = argument.expression
           let declaration: DeclSyntax =
           """
-            public static let alias = \(argument.expression)
+            public static let alias: String? = \(argument.expression)
           """
           declarations.append(declaration)
         case "path":
@@ -73,12 +73,12 @@ extension ScreenMacro: MemberMacro {
       if cases.isEmpty {
         declaration =
       """
-        typealias ParamsKey = EmptyKeys
+        public typealias ParamsKey = EmptyKeys
       """
       } else {
         declaration =
       """
-        enum ParamsKey: String, CaseIterable {
+        public enum ParamsKey: String, CaseIterable {
         \(raw: cases)
         }
       """

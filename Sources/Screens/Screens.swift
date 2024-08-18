@@ -41,12 +41,24 @@ public final class Screens: NSObject, ObservableObject {
   public static var current: ScreenProxy { Screens.shared.current ?? ScreenController.root }
 
   var current: ScreenController? {
-    let appeared = controllers.all().filter { $0.state.isAppeared }
+    let appeared = controllers.all().filter { $0.state.isAppeared && $0.parent != nil }
     let node = appeared.sorted(by: { $0.state.lastAppeared > $1.state.lastAppeared }).first
 
     return node
   }
-  
+
+  func screen(kind: ScreenEvent.Kind, for controller: ScreenController) {
+    let event = ScreenEvent(id: controller.id,
+                            staticID: controller.staticID,
+                            kind: kind)
+    screen(event: event)
+  }
+
+  func screen(event: ScreenEvent) {
+    browser?.send(message: .screenEvent(event))
+    delegate?.event(event: event)
+  }
+
   func screen(created controller: ScreenController) {
     controllers.add(controller)
     browser?.synchronize()
@@ -72,6 +84,10 @@ public final class Screens: NSObject, ObservableObject {
 
   func screen(by id: ScreenID) -> ScreenController? {
     controllers.by(id: id)
+  }
+
+  func screen(error: String) {
+    browser?.send(message: .error(error))
   }
 
 }

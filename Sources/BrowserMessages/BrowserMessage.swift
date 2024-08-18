@@ -16,6 +16,8 @@ public enum BrowserMessage {
     case appLiveState(AppLiveState)
     case screensStaticInfo([ScreenStaticInfo])
     case screenURLError(ScreenURL, String)
+    case error(String)
+    case screenEvent(ScreenEvent)
 
     public var debugDescription: String {
       switch self {
@@ -24,6 +26,8 @@ public enum BrowserMessage {
       case .screenShoot: "screenShoot"
       case .screen: "screen"
       case .screensStaticInfo: "screensStaticInfo"
+      case .screenEvent(let event): event.description
+      case let .error(error): "Error: \(error)"
       case let .screenURLError(url, error): "Failed to open \(url). Error: \(error)"
       }
     }
