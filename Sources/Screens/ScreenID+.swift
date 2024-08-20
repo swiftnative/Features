@@ -3,7 +3,7 @@
 // Copyright © 2024 Alexey Nenastyev (github.com/alexejn). All Rights Reserved.
 
 
-import BrowserMessages
+import ScreensBrowser
 
 extension ScreenID {
   private static var counter: ScreenID = 1

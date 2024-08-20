@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-import BrowserMessages
+import ScreensBrowser
 
 extension ScreenController: ScreenProxy {
 

@@ -6,7 +6,7 @@
 import Foundation
 import os
 import UIKit
-import BrowserMessages
+import ScreensBrowser
 
 /// Global delegate for all features
 public protocol ScreensDelegate {

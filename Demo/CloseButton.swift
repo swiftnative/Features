@@ -4,7 +4,7 @@
 
 
 import SwiftUI
-import Features
+import ScreensUI
 
 struct CloseButton: View {
     var body: some View {

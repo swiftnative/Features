@@ -6,7 +6,7 @@
 //
 import SwiftUI
 import Observation
-@_exported import Features
+@_exported import ScreensUI
 
 @main
 struct MusicApp: App {

@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import Features
+import ScreensUI
 
 @Screen(alias: "Library")
 struct LibraryView {

@@ -4,7 +4,7 @@
 
 
 import Foundation
-import Features
+import ScreensUI
 
 extension MusicApp: ScreensDelegate {
 

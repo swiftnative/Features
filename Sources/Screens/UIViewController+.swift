@@ -5,7 +5,7 @@
 //  Created by Alexey Nenastev on 28.7.24..
 //
 
-import BrowserMessages
+import ScreensBrowser
 import SwiftUI
 
 extension UIViewController {

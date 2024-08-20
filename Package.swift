@@ -14,12 +14,12 @@ let package = Package(
     .macCatalyst(.v13)],
   products: [
     .library(
-      name: "Features",
-      targets: ["Features"]
+      name: "ScreensUI",
+      targets: ["ScreensUI"]
     ),
     .library(
-      name: "BrowserMessages",
-      targets: ["BrowserMessages"]
+      name: "ScreensBrowser",
+      targets: ["ScreensBrowser"]
     ),
     .executable(
         name: "ScreensClient",
@@ -38,18 +38,18 @@ let package = Package(
       ],
       path: "Sources/ScreensMacros"
     ),
-    .target(name: "BrowserMessages",
-            path: "Sources/BrowserMessages"),
+    .target(name: "ScreensBrowser",
+            path: "Sources/ScreensBrowser"),
 
-    .target(name: "Features",
-            dependencies: ["BrowserMessages", "ScreensMacros", "Notifications"],
+    .target(name: "ScreensUI",
+            dependencies: ["ScreensBrowser", "ScreensMacros", "Notifications"],
             path: "Sources/Screens"),
 
     .target(name: "Notifications",
             path: "Sources/Notifications"),
 
     .executableTarget(name: "ScreensClient",
-                      dependencies: ["Features"],
+                      dependencies: ["ScreensUI"],
                       path: "Sources/ScreensClient"),
     .testTarget(
       name: "ScreensTests",

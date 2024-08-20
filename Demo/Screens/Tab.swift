@@ -4,7 +4,7 @@
 
 
 import SwiftUI
-import Features
+import ScreensUI
 import Combine
 
 @Screen(alias: "Tab")

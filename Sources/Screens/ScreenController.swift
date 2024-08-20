@@ -5,7 +5,7 @@
 
 import Foundation
 import os
-import BrowserMessages
+import ScreensBrowser
 import SwiftUI
 import Combine
 

@@ -3,7 +3,7 @@
 // Copyright © 2024 Alexey Nenastyev (github.com/alexejn). All Rights Reserved.
 
 import SwiftUI
-import Features
+import ScreensUI
 
 @Screen(alias: "MyMusic")
 struct MyMusicView {

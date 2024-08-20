@@ -6,7 +6,7 @@
 import Foundation
 import Notifications
 import SwiftUI
-import BrowserMessages
+import ScreensBrowser
 
 extension Notification {
   struct PushScreenNotification: PayloadNotification {

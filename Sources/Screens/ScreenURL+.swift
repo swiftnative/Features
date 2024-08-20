@@ -4,7 +4,7 @@
 
 
 import Foundation
-import BrowserMessages
+import ScreensBrowser
 
 public extension ScreenURL {
    func callAsFunction<S: Screen>(by type: S.Type) where S: ScreenURLDecodable {

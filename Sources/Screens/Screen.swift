@@ -1,5 +1,5 @@
 import SwiftUI
-import BrowserMessages
+import ScreensBrowser
 
 /// A type that represents featue in your app.
 public protocol Screen: View {

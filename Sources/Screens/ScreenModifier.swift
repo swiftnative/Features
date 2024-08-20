@@ -2,7 +2,7 @@
 // Created by Alexey Nenastyev on 11.7.24.
 // Copyright © 2024 Alexey Nenastyev (github.com/alexejn). All Rights Reserved.
 import SwiftUI
-import BrowserMessages
+import ScreensBrowser
 
 /// Modifier to configure global features behavior
 public struct ScreenModifier: ViewModifier {

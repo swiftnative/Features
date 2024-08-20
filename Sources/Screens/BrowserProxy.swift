@@ -4,7 +4,7 @@
 
 
 import Foundation
-import BrowserMessages
+import ScreensBrowser
 
 public final class BrowserProxy: NSObject, ObservableObject {
 

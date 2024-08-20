@@ -4,17 +4,15 @@
 
 
 import SwiftUI
-import Features
+import ScreensUI
 
 @Screen(alias: "Settings")
 struct SettingsView: View {
-
 
   var screenBody: some View {
     NavigationStack {
       VStack {
         ConnectionView()
-
         List {
           Button("Theme") {
             Screens.current.push(ChoseThemeScreen())

@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import BrowserMessages
+import ScreensBrowser
 
 
 extension Screens: BrowserDelegate {

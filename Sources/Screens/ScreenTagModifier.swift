@@ -5,7 +5,7 @@
 
 import Foundation
 import SwiftUI
-import BrowserMessages
+import ScreensBrowser
 import Notifications
 
 public typealias ScreenTag = String

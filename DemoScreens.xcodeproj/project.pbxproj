@@ -13,7 +13,6 @@
 		4F0221E12C5A7A62009EA375 /* Login.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0221E02C5A7A62009EA375 /* Login.swift */; };
 		4F0221E42C5A7BE4009EA375 /* ChoseTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0221E32C5A7BE4009EA375 /* ChoseTheme.swift */; };
 		4F0221E62C5A857C009EA375 /* SongListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0221E52C5A857C009EA375 /* SongListView.swift */; };
-		4F124F7E2C7024D30076FADC /* Features in Frameworks */ = {isa = PBXBuildFile; productRef = 4F124F7D2C7024D30076FADC /* Features */; };
 		4F8C89842C3D814200036416 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8C89832C3D814200036416 /* Settings.swift */; };
 		4F94ED052C38765800CDE243 /* MusicApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F94ED042C38765800CDE243 /* MusicApp.swift */; };
 		4F94ED072C38765800CDE243 /* Library.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F94ED062C38765800CDE243 /* Library.swift */; };
@@ -21,11 +20,12 @@
 		4F94ED0C2C38765900CDE243 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4F94ED0B2C38765900CDE243 /* Preview Assets.xcassets */; };
 		4F94ED192C38997D00CDE243 /* Tab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F94ED182C38997D00CDE243 /* Tab.swift */; };
 		4F94ED1B2C389A2900CDE243 /* StarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F94ED1A2C389A2900CDE243 /* StarView.swift */; };
+		4FAE3A3A2C752B2D002C9DEE /* ScreensBrowser in Frameworks */ = {isa = PBXBuildFile; productRef = 4FAE3A392C752B2D002C9DEE /* ScreensBrowser */; };
+		4FAE3A3C2C752B2D002C9DEE /* ScreensUI in Frameworks */ = {isa = PBXBuildFile; productRef = 4FAE3A3B2C752B2D002C9DEE /* ScreensUI */; };
 		4FFC71B22C5A952100586EF6 /* Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FFC71B12C5A952100586EF6 /* Info.swift */; };
 		4FFC71B42C5AC45000586EF6 /* CloseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FFC71B32C5AC45000586EF6 /* CloseButton.swift */; };
 		4FFC71B62C5AC60800586EF6 /* Musicant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FFC71B52C5AC60800586EF6 /* Musicant.swift */; };
 		4FFC71B82C5AD0B700586EF6 /* Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FFC71B72C5AD0B700586EF6 /* Search.swift */; };
-		4FFC71C22C5C04B500586EF6 /* Features in Frameworks */ = {isa = PBXBuildFile; productRef = 4FFC71C12C5C04B500586EF6 /* Features */; };
 		4FFC71C42C5E837800586EF6 /* MusicApp+ScreensDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FFC71C32C5E837800586EF6 /* MusicApp+ScreensDelegate.swift */; };
 /* End PBXBuildFile section */
 
@@ -57,8 +57,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4FFC71C22C5C04B500586EF6 /* Features in Frameworks */,
-				4F124F7E2C7024D30076FADC /* Features in Frameworks */,
+				4FAE3A3A2C752B2D002C9DEE /* ScreensBrowser in Frameworks */,
+				4FAE3A3C2C752B2D002C9DEE /* ScreensUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -86,7 +86,7 @@
 		4F94ECF82C38765800CDE243 = {
 			isa = PBXGroup;
 			children = (
-				4F94ED032C38765800CDE243 /* ViewURL */,
+				4F94ED032C38765800CDE243 /* Demo */,
 				4F94ED022C38765800CDE243 /* Products */,
 				4F94ED122C3876A300CDE243 /* Frameworks */,
 			);
@@ -100,7 +100,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		4F94ED032C38765800CDE243 /* ViewURL */ = {
+		4F94ED032C38765800CDE243 /* Demo */ = {
 			isa = PBXGroup;
 			children = (
 				4F0221E22C5A7B66009EA375 /* Screens */,
@@ -113,7 +113,7 @@
 				4F0221E52C5A857C009EA375 /* SongListView.swift */,
 				4F94ED1A2C389A2900CDE243 /* StarView.swift */,
 			);
-			path = ViewURL;
+			path = Demo;
 			sourceTree = "<group>";
 		};
 		4F94ED0A2C38765900CDE243 /* Preview Content */ = {
@@ -148,8 +148,8 @@
 			);
 			name = DemoScreens;
 			packageProductDependencies = (
-				4FFC71C12C5C04B500586EF6 /* Features */,
-				4F124F7D2C7024D30076FADC /* Features */,
+				4FAE3A392C752B2D002C9DEE /* ScreensBrowser */,
+				4FAE3A3B2C752B2D002C9DEE /* ScreensUI */,
 			);
 			productName = ViewURL;
 			productReference = 4F94ED012C38765800CDE243 /* DemoScreens.app */;
@@ -180,6 +180,7 @@
 			);
 			mainGroup = 4F94ECF82C38765800CDE243;
 			packageReferences = (
+				4FAE3A382C752B2D002C9DEE /* XCLocalSwiftPackageReference "../Screens" */,
 			);
 			productRefGroup = 4F94ED022C38765800CDE243 /* Products */;
 			projectDirPath = "";
@@ -355,11 +356,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"ViewURL/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Demo/Preview Content\"";
 				DEVELOPMENT_TEAM = 3BVL9BNASU;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = ViewURL/Info.plist;
+				INFOPLIST_FILE = Demo/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -386,11 +387,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"ViewURL/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Demo/Preview Content\"";
 				DEVELOPMENT_TEAM = 3BVL9BNASU;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = ViewURL/Info.plist;
+				INFOPLIST_FILE = Demo/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -433,14 +434,21 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCSwiftPackageProductDependency section */
-		4F124F7D2C7024D30076FADC /* Features */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = Features;
+/* Begin XCLocalSwiftPackageReference section */
+		4FAE3A382C752B2D002C9DEE /* XCLocalSwiftPackageReference "../Screens" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../Screens;
 		};
-		4FFC71C12C5C04B500586EF6 /* Features */ = {
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4FAE3A392C752B2D002C9DEE /* ScreensBrowser */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = Features;
+			productName = ScreensBrowser;
+		};
+		4FAE3A3B2C752B2D002C9DEE /* ScreensUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ScreensUI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

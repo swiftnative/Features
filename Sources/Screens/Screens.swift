@@ -7,7 +7,7 @@ import Foundation
 import SwiftUI
 import Combine
 import Notifications
-@_exported import BrowserMessages
+@_exported import ScreensBrowser
 
 public final class Screens: NSObject, ObservableObject {
 
