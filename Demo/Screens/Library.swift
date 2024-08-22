@@ -16,7 +16,7 @@ struct LibraryView {
   @State var nativeSheet = false
 
   var screenBody: some View {
-    NavigationStack{
+    NavigationStack {
       Group {
         if searchText.isEmpty {
           List {

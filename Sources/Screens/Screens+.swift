@@ -18,4 +18,17 @@ public extension Screens {
   static func action<S: Screen>(_ action: ScreenAction, screen: S, params: ScreenAction.Params? = nil) {
     delegate.action(action, screen: screen, params: params)
   }
+
+  static func push<S: Screen>(_ screen: S) {
+    delegate.action(.push, screen: screen, params: nil)
+  }
+
+  static func fullScreen<S: Screen>(_ screen: S) {
+    delegate.action(.fullscreen, screen: screen, params: nil)
+  }
+
+  static func sheet<S: Screen>(_ screen: S) {
+    delegate.action(.sheet, screen: screen, params: nil)
+  }
 }
+

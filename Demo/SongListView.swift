@@ -9,11 +9,13 @@ import UIKit
 struct SongListView: View {
   @Environment(\.color) var color
   var songs: [Song]
+  @State var isPresented: Bool = false
+
+  @State var color2: Color?
 
   var body: some View {
     ForEach(songs) { song in
       Button(song.author.name + " - " + song.title, systemImage: "music.note") {
-        Screens.current.environment(\.color, color)
         Screens.current.sheet(SongView(song: song), modifier: .closeButton)
       }
     }

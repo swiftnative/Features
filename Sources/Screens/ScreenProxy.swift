@@ -17,15 +17,10 @@ public protocol ScreenProxy {
   /// Apply modifier before fullscreen
   func fullscreen<S: Screen, M: ViewModifier>(_ screen: S, modifier: M)
   /// Present Sheet
-  func sheet<S: Screen, M: ViewModifier>(_ screen: S, modifier: M, configurate: (UISheetPresentationController) -> Void)
+  func sheet<S: Screen, M: ViewModifier>(_ screen: S, modifier: M)
   /// Close FullScreen or Sheet
   func close()
 
-  /// Screen environment
-  var environment: EnvironmentValues { get }
-
-  /// Set Screen environment values
-  func environment<V>(_ keyPath: WritableKeyPath<EnvironmentValues, V>, _ value: V)
 }
 
 public extension ScreenProxy {
@@ -37,9 +32,7 @@ public extension ScreenProxy {
 
   /// Present Sheet
   func sheet<S, M: ViewModifier>(_ screen: S, modifier: M)  where S : Screen  {
-    sheet(screen, modifier: modifier) {
-      $0.detents = [.medium(), .large()]
-    }
+    sheet(screen, modifier: modifier)
   }
   /// Present Fullscreen
   func fullscreen<S>(_ screen: S) where S : Screen {

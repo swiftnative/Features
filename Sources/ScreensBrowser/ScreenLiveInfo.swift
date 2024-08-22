@@ -17,10 +17,9 @@ public struct ScreenLiveInfo: Hashable, Codable {
   public let info: String
   public var type: String { staticID.type }
   public var file: String { staticID.file }
-  public var environment: EnvironmentInfo?
-  public var preferences: PreferencesInfo?
   public let alias: String?
   public let hasParentVC: Bool
+  public let hasNavigationDestination: Bool
 
 
   public init(screenID: ScreenID,
@@ -30,25 +29,23 @@ public struct ScreenLiveInfo: Hashable, Codable {
               parentScreenID: ScreenID?,
               hasParentVC: Bool = true,
               state: ScreenState,
+              hasNavigationDestination: Bool = false,
               size: ScreeSize,
               stack: NavigationStackInfo?,
               children: [ScreenID] = [],
-              environment: EnvironmentInfo? = nil,
-              preferences: PreferencesInfo? = nil,
               info: String) {
     self.screenID = screenID
     self.staticID = staticID
     self.hasParentVC = hasParentVC
     self.alias = alias
     self.tag = tag
+    self.hasNavigationDestination = hasNavigationDestination
     self.parentScreenID = parentScreenID
     self.state = state
     self.size = size
     self.stack = stack
     self.info = info
     self.children = children
-    self.environment = environment
-    self.preferences = preferences
   }
 }
 
@@ -86,21 +83,4 @@ public struct NavigationStackInfo: Codable, Hashable {
 public enum StackKind: String, Codable {
   case inner
   case outer
-}
-
-public struct EnvironmentInfo: Codable, Hashable {
-  public let isPresented: Bool
-
-  public init(isPresented: Bool) {
-    self.isPresented = isPresented
-  }
-}
-
-
-public struct PreferencesInfo: Codable, Hashable {
-  public let innerNaigationDestination: Bool
-
-  public init(innerNaigationDestination: Bool) {
-    self.innerNaigationDestination = innerNaigationDestination
-  }
 }

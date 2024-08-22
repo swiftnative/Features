@@ -11,8 +11,6 @@ public struct ScreenModifier: ViewModifier {
   @Environment(\.isPresented) var isPresented
   @Environment(\.dismiss) var dismiss
   @Environment(\.screenID) var parentScreenID
-  @Environment(\.self) var environment
-  @State var screenEnvironmentID = UUID()
 
   public init<S: Screen>(_ screen: S.Type, alias: String?) {
     _controller = StateObject(wrappedValue: ScreenController(staticID: screen.screenID, alias: alias))
@@ -21,22 +19,31 @@ public struct ScreenModifier: ViewModifier {
   public func body(content: Content) -> some View {
     content
       .onPreferenceChange(ScreenNavigationDestinationPreferenceKey.self, perform: { [weak controller] value in
-        controller?.hasInnerNavigationDestination = value
+        controller?.hasNavigationDestination = value
       })
-      .modifier(NavigationStackModifier(kind: .outer))
+      .fullScreenCover(item: $controller.fullcreen) { $0.view }
+      .sheet(item: $controller.sheet) { $0.view }
+      .push(item: $controller.pushOuter) { $0.view }
+      .environmentObject(controller)
       .environment(\.screenID, controller.id)
       .onAppear { [weak controller] in
-        controller?.onAppear(environment: environment)
+        controller?.parentScreenID = parentScreenID == .zero ? nil : parentScreenID
+        controller?.isPresented = isPresented
+        controller?.onAppear()
       }
       .onDisappear { [weak controller] in
         controller?.onDissappear()
       }
       .onChange(of: isPresented, perform: { [weak controller] _ in
-        controller?.onIsPresentedChanged(environment: environment)
+        controller?.isPresented = isPresented
       })
       .background {
         ViewControllerAccessor(controller: controller)
       }
+      .onReceive(controller.doDismiss, perform: { _ in
+        dismiss()
+      })
+
   }
 }
 
@@ -51,13 +58,13 @@ private struct ViewControllerAccessor: UIViewControllerRepresentable {
   }
 }
 
-struct ParentScreenIDKey : EnvironmentKey {
+struct ScreenIDKey : EnvironmentKey {
   static var defaultValue: ScreenID = .zero
 }
 
 public extension EnvironmentValues {
   var screenID: ScreenID {
-    get { self[ParentScreenIDKey.self] }
-    set { self[ParentScreenIDKey.self] = newValue }
+    get { self[ScreenIDKey.self] }
+    set { self[ScreenIDKey.self] = newValue }
   }
 }

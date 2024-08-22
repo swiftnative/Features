@@ -9,8 +9,8 @@ import ScreensBrowser
 import SwiftUI
 import Combine
 
+
 public final class ScreenController: UIViewController, ObservableObject {
-  typealias Dismiss = () -> Void
   public let id: ScreenID = .newScreenID
   public let staticID: ScreenStaticID
   let alias: String?
@@ -18,26 +18,21 @@ public final class ScreenController: UIViewController, ObservableObject {
   public var parentScreenID: ScreenID?
   var state: ScreenState
   private var isFirstAppear: Bool = true
-  private var isPresented: Bool { presentingViewController != nil }
-  var dismissAction: DismissAction? { environment.dismiss }
+  var isPresented: Bool = false
   var info: String = ""
   var stack: NavigationStackInfo?
-  var hasInnerNavigationDestination: Bool = false
+  var hasNavigationDestination: Bool = false
+
+  let doDismiss = PassthroughSubject<Void, Never>()
 
   let logger = Logger(subsystem: "screens", category: "screens")
 
   var screens: Screens { Screens.shared }
-  
 
-  public internal(set) var environment: EnvironmentValues = EnvironmentValues()
-
-  var environmentInfo: EnvironmentInfo {
-    EnvironmentInfo(isPresented: environment.isPresented)
-  }
-
-  var preferencesInfo: PreferencesInfo {
-    PreferencesInfo(innerNaigationDestination: hasInnerNavigationDestination)
-  }
+  @Published var fullcreen: ScreenAppearRequest?
+  @Published var sheet: ScreenAppearRequest?
+  @Published var pushOuter: ScreenAppearRequest?
+  @Published var pushNavigationDestination: ScreenAppearRequest?
 
   init(staticID: ScreenStaticID, alias: String?) {
     self.staticID = staticID
@@ -53,10 +48,8 @@ public final class ScreenController: UIViewController, ObservableObject {
 
   private(set) var childrenScreens: [ScreenID] = []
 
-  func onAppear(environment: EnvironmentValues) {
-    logger.debug("[\(self.logID)] onAppear")
-    self.parentScreenID = environment.screenID == .zero ? nil : environment.screenID
-    self.environment = environment
+  func onAppear() {
+    logger.debug("\(self.logID) onAppear")
   }
 
   func screenshot() {
@@ -72,36 +65,26 @@ public final class ScreenController: UIViewController, ObservableObject {
   }
 
   func onDissappear() {
-    logger.debug("[\(self.logID)] onDissappear")
-  }
-
-  func onIsPresentedChanged(environment: EnvironmentValues) {
-    logger.debug("[\(self.logID)] onIsPresentedChanged \(environment.isPresented)")
-    self.environment = environment
-    screens.screen(stateUpdated: self)
+    logger.debug("\(self.logID) onDissappear")
   }
 
   public override func viewDidLoad() {
     super.viewDidLoad()
-    logger.debug("[\(self.logID)] viewDidLoad")
+    logger.debug("\(self.logID) viewDidLoad")
   }
 
   public func dismiss() {
-    if environment.isPresented {
-      dismissAction?()
-    } else {
-      self.dismiss(animated: true)
-    }
+    doDismiss.send()
   }
 
   deinit {
-    logger.debug("[\(self.logID)] deinit")
+    logger.debug("\(self.logID) deinit")
     screens.screen(removed: id)
   }
 
   public override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
-    logger.debug("[\(self.logID)] viewDidAppear")
+    logger.debug("\(self.logID) viewDidAppear")
     guard state.isAppeared == false else { return }
 
     state.isAppeared = true
@@ -119,7 +102,7 @@ public final class ScreenController: UIViewController, ObservableObject {
 
   public override func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
-    logger.debug("[\(self.logID)] viewDidDisappear")
+    logger.debug("\(self.logID) viewDidDisappear")
     self.state.isAppeared = false
     screens.screen(kind: .didDisappear, for: self)
     screens.screen(stateUpdated: self)
@@ -127,17 +110,17 @@ public final class ScreenController: UIViewController, ObservableObject {
 
   public override func didMove(toParent parent: UIViewController?) {
     super.didMove(toParent: parent)
-    logger.debug("[\(self.logID)] didMove to:\(parent)")
+    logger.debug("\(self.logID) didMove to:\(parent)")
     update()
     screens.screen(stateUpdated: self)
   }
 
   public override var debugDescription: String {
-    "\(self)[\(staticID.type)-\(id)]"
+    "\(self) \(logID)"
   }
 
   var logID: String {
-    "\(staticID.type)-\(id)"
+    "\(staticID.type)[\(id)]"
   }
 }
 
@@ -160,11 +143,10 @@ extension ScreenController {
                    parentScreenID: parentScreenID,
                    hasParentVC: parent != nil,
                    state:  state,
+                   hasNavigationDestination: hasNavigationDestination,
                    size: ScreeSize(size: parent?.view.frame.size ?? view.frame.size),
                    stack: stack,
                    children: childrenScreens,
-                   environment: environmentInfo,
-                   preferences: preferencesInfo,
                    info: info)
   }
 

@@ -38,6 +38,6 @@ public struct ScreenEvent: CustomStringConvertible, Codable {
   }
 
   public var description: String {
-    "Screen \(screenStaticID.type)-\(id) \(kind)"
+    "Screen \(screenStaticID.type)[\(id)] \(kind)"
   }
 }

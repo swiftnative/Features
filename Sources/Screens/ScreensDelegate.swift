@@ -7,6 +7,7 @@ import Foundation
 import os
 import UIKit
 import ScreensBrowser
+import SwiftUI
 
 /// Global delegate for all features
 public protocol ScreensDelegate {
@@ -19,7 +20,8 @@ public protocol ScreensDelegate {
   func action<S: Screen>(_ action: ScreenAction, screen: S, params: ScreenAction.Params?)
 
   func event(event: ScreenEvent)
-
+//
+//  func view<S: Screen>(for screen: S, request: ScreenAppearRequest.Kind) -> AnyView
 }
 
 public extension ScreensDelegate {
@@ -63,4 +65,8 @@ public extension ScreensDelegate {
       break
     }
   }
+//
+//  func view<S: Screen>(for screen: S, request: ScreenAppearRequest.Kind) -> AnyView {
+//    AnyView(screen)
+//  }
 }

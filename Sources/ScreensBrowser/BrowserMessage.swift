@@ -45,7 +45,7 @@ public enum BrowserMessage {
       switch self {
       case let .screenURL(url): "Open \(url)"
       case let .sendScreenInfo(nodeID): "sendScreenInfo \(nodeID)"
-      case .dismiss(let id): "dismiss \(id)"
+      case .dismiss(let id): "dismiss [\(id)]"
       case .sendAppication: "sendAppication"
       case .sendAppState: "sendAppState"
       case .sendAllScreens: "sendAllScreens"

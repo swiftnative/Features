@@ -11,81 +11,53 @@ import ScreensBrowser
 
 extension ScreenController: ScreenProxy {
 
-  public func environment<V>(_ keyPath: WritableKeyPath<EnvironmentValues, V>, _ value: V) {
-    self.environment[keyPath: keyPath] = value
+  private func log(error message: String) {
+    logger.error("[\(self.logID)] \(message)")
+    screens.screen(error: "[\(self.logID)] \(message)")
   }
 
   public func push<S, M>(_ screen: S, modifier: M) where S : Screen, M : ViewModifier {
     screens.screen(kind: .willPush(S.screenID), for: self)
 
-    var stackKind: StackKind?
+    let view = AnyView(screen.modifier(modifier))
+    let request = ScreenAppearRequest(screenStaticID: S.screenID, view: view)
+
+    if hasNavigationDestination && innerNC != nil {
+      pushNavigationDestination = request
+      return
+    }
+
+    if hasNavigationDestination && outerNC != nil {
+      log(error: "Has NavigationDestination, but no inner stack. Will try to push to the outer \(S.self).")
+      pushOuter = request
+      return
+    }
 
     if outerNC != nil {
-      stackKind = .outer
-    } else if innerNC != nil {
-      stackKind = .inner
-    }
-    
-    guard let stackKind else {
-      logger.error("[\(self.logID)] Cannot push screen \(S.self). No stack .")
-      screens.screen(error: "[\(self.logID)] Cannot push screen \(S.self). No stack .")
+      pushOuter = request
       return
     }
 
-    if stackKind == .inner &&  hasInnerNavigationDestination == false  {
-      logger.error("[\(self.logID)] Has inner stack, but no screenNavigationDestination. Cannot push screen \(S.self).")
-      screens.screen(error: "[\(self.logID)] Has inner stack, but no screenNavigationDestination. Cannot push screen \(S.self).")
+    if innerNC != nil {
+      log(error: "No NavigationDestination, but has inner stack. Will try to push \(S.self).")
+      pushNavigationDestination = request
       return
     }
 
-    let rootView = screen
-      .modifier(modifier)
+    log(error:  "Cannot push screen \(S.self). No stack .")
 
-    Notification.PushScreenNotification.post(.init(screen: AnyView(rootView),
-                                             kind: stackKind,
-                                             stackHolder: id))
-//    stack.pushViewController(UIHostingController(rootView: AnyView(rootView)), animated: true)
   }
 
   public func fullscreen<S, M>(_ screen: S, modifier: M) where S : Screen, M : ViewModifier {
     screens.screen(kind: .willFullscreen(S.screenID), for: self)
-
-    guard let parent else {
-      logger.error("[\(self.logID)] Cannot present fullscreen screen \(S.self). Parent view controller is nil.")
-      screens.screen(error: "[\(self.logID)] Cannot present fullscreen screen \(S.self). Parent view controller is nil.")
-      return
-    }
-
-    let rootView = screen
-      .modifier(modifier)
-      .environment(\.screenID, id)
-      .environment(\.self, environment)
-
-    let vc = ScreensPresentationHostingController(rootView: rootView)
-    vc.modalPresentationStyle = .fullScreen
-    parent.present(vc, animated: true)
+    let view = AnyView(screen.modifier(modifier))
+    self.fullcreen = ScreenAppearRequest(screenStaticID: S.screenID, view: view)
   }
 
-  public func sheet<S, M>(_ screen: S, modifier: M, configurate: (UISheetPresentationController) -> Void) where S : Screen, M : ViewModifier  {
+  public func sheet<S, M>(_ screen: S, modifier: M) where S : Screen, M : ViewModifier  {
     screens.screen(kind: .willSheet(S.screenID), for: self)
-
-    guard let parent else {
-      logger.error("[\(self.logID)] Cannot present sheet screen \(S.self). Parent view controller is nil.")
-      screens.screen(error: "[\(self.logID)] Cannot present sheet screen \(S.self). Parent view controller is nil.")
-      return
-    }
-    let rootView = screen
-      .modifier(modifier)
-      .environment(\.screenID, id)
-      .environment(\.self, environment)
-
-    let vc = ScreensPresentationHostingController(rootView: rootView)
-    if let sheet = vc.sheetPresentationController {
-      configurate(sheet)
-    }
-    DispatchQueue.main.async {
-      parent.present(vc, animated: true)
-    }
+    let view = AnyView(screen.modifier(modifier))
+    self.sheet = ScreenAppearRequest(screenStaticID: S.screenID, view: view)
   }
 
   public func close() {
@@ -93,14 +65,16 @@ extension ScreenController: ScreenProxy {
   }
 }
 
-
+public extension ViewModifier where Self == EmptyModifier {
+  static var empty: Self { EmptyModifier() }
+}
 
 extension UIApplication {
-    var firstKeyWindow: UIWindow? {
-        return UIApplication.shared.connectedScenes
-            .compactMap { $0 as? UIWindowScene }
-            .filter { $0.activationState == .foregroundActive }
-            .first?.keyWindow
+  var firstKeyWindow: UIWindow? {
+    return UIApplication.shared.connectedScenes
+      .compactMap { $0 as? UIWindowScene }
+      .filter { $0.activationState == .foregroundActive }
+      .first?.keyWindow
 
-    }
+  }
 }
