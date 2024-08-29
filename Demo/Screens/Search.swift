@@ -7,7 +7,7 @@ import SwiftUI
 
 @Screen(alias: "Seach")
 struct SearchScreen: View {
-  @Environment(MyMusicApp.self) var app
+  @EnvironmentObject var app:MyMusicApp
   @Binding var searchText: String
 
   var screenBody: some View {
@@ -20,5 +20,5 @@ struct SearchScreen: View {
 
 #Preview {
   SearchScreen(searchText: .constant("a"))
-    .environment(MyMusicApp())
+    .environmentObject(MyMusicApp())
 }

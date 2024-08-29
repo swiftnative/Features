@@ -11,7 +11,7 @@ import ScreensUI
 @Screen(alias: "Library")
 struct LibraryView {
 
-  @Environment(MyMusicApp.self) var app
+  @EnvironmentObject var app: MyMusicApp
   @State var searchText = ""
   @State var nativeSheet = false
 
@@ -75,6 +75,9 @@ struct LibraryView {
         }
       }
       .screenNavigationDestination
+      .onAppear {
+        print("Library appear current: \(Screens.current)")
+      }
     }
 
   }
@@ -82,5 +85,5 @@ struct LibraryView {
 
 #Preview {
   LibraryView()
-    .environment(MyMusicApp())
+    .environmentObject(MyMusicApp())
 }

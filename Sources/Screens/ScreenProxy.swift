@@ -8,8 +8,9 @@
 import Foundation
 import UIKit
 import SwiftUI
+import ScreensBrowser
 
-public protocol ScreenProxy {
+public protocol ScreenProxy: CustomStringConvertible {
   /// Equal to Envronment(\.dismiss), one step back in stack or dismiss presented view
   func dismiss()
   /// Push to NavaigationController
@@ -18,9 +19,13 @@ public protocol ScreenProxy {
   func fullscreen<S: Screen, M: ViewModifier>(_ screen: S, modifier: M)
   /// Present Sheet
   func sheet<S: Screen, M: ViewModifier>(_ screen: S, modifier: M)
-  /// Close FullScreen or Sheet
-  func close()
 
+  func sheet<S: Screen, M1: ViewModifier, M2: ViewModifier>(_ screen: S, modifier: M1, _ modifier2: M2)
+
+
+  var stack: StackProxy? { get }
+
+  var id: ScreenID { get}
 }
 
 public extension ScreenProxy {

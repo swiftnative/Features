@@ -18,6 +18,14 @@ struct TabScreen {
           Label("Library", systemImage: "books.vertical")
         }
 
+      ScreenStack {
+        UseCasesScreen()
+      }
+      .tabItem {
+        Label("Use Cases", systemImage: "scribble.variable")
+      }
+      .accessibilityIdentifier("Use Cases")
+
       MyMusicView()
         .tabItem {
           Label("MyMusic", systemImage: "music.note")
@@ -28,10 +36,11 @@ struct TabScreen {
           Label("Settings", systemImage: "gear")
         }
     }
+    .accessibilityIdentifier("Tab Bar")
   }
 }
 
 #Preview {
   TabScreen()
-    .environment(MyMusicApp())
+    .environmentObject(MyMusicApp())
 }

@@ -26,11 +26,8 @@ public struct ScreenModifier: ViewModifier {
       .push(item: $controller.pushOuter) { $0.view }
       .environmentObject(controller)
       .environment(\.screenID, controller.id)
-      .onAppear { [weak controller] in
-        controller?.parentScreenID = parentScreenID == .zero ? nil : parentScreenID
-        controller?.isPresented = isPresented
-        controller?.onAppear()
-      }
+      .environment(\.screen, controller.screenInfo)
+
       .onDisappear { [weak controller] in
         controller?.onDissappear()
       }
@@ -43,6 +40,11 @@ public struct ScreenModifier: ViewModifier {
       .onReceive(controller.doDismiss, perform: { _ in
         dismiss()
       })
+      .onAppear { [weak controller] in
+        controller?.parentScreenID = parentScreenID == .zero ? nil : parentScreenID
+        controller?.isPresented = isPresented
+        controller?.onAppear()
+      }
 
   }
 }
@@ -66,5 +68,27 @@ public extension EnvironmentValues {
   var screenID: ScreenID {
     get { self[ScreenIDKey.self] }
     set { self[ScreenIDKey.self] = newValue }
+  }
+}
+
+struct ScreenKey : EnvironmentKey {
+  static var defaultValue: ScreenInfo = .empty
+}
+
+public struct ScreenInfo: CustomStringConvertible {
+  public let id: ScreenID
+  public let type: String
+
+  public var description: String {
+    "\(type)[\(id)]"
+  }
+
+  public static var empty = ScreenInfo(id: 0, type: "")
+}
+
+public extension EnvironmentValues {
+  var screen: ScreenInfo {
+    get { self[ScreenKey.self] }
+    set { self[ScreenKey.self] = newValue }
   }
 }

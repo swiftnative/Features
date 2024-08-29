@@ -41,7 +41,10 @@ public final class Screens: NSObject, ObservableObject {
   public static var current: ScreenProxy { Screens.shared.current ?? ScreenController.root }
 
   var current: ScreenController? {
-    let appeared = controllers.all().filter { $0.state.isAppeared && $0.parent != nil }
+    let appeared = controllers.all().filter {
+      $0.state.isAppeared &&
+      $0.parent != nil && /// иначе при таббаре появляются контроллеры которые становятся активными но при этом ни разу не показывались
+      !$0.isDesappearing }
     let node = appeared.sorted(by: { $0.state.lastAppeared > $1.state.lastAppeared }).first
 
     return node

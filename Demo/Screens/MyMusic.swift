@@ -7,7 +7,7 @@ import ScreensUI
 
 @Screen(alias: "MyMusic")
 struct MyMusicView {
-  @Environment(MyMusicApp.self) var app
+  @EnvironmentObject var app: MyMusicApp
   @State var loginPresented: Bool = false
 
   init() {}
@@ -51,5 +51,5 @@ struct MyMusicView {
 
 #Preview {
   MyMusicView()
-    .environment(MyMusicApp())
+    .environmentObject(MyMusicApp())
 }

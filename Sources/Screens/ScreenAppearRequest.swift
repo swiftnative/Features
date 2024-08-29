@@ -13,8 +13,9 @@ public struct ScreenAppearRequest: Hashable, Identifiable {
 
   private static var counter: RequestID = 1
 
-  let screenStaticID: ScreenStaticID
-  let view: AnyView
+  public let screenStaticID: ScreenStaticID
+  public let view: AnyView
+  public var animation: Bool = false
 
   let requestID: RequestID = {
     let value = Self.counter
@@ -23,6 +24,11 @@ public struct ScreenAppearRequest: Hashable, Identifiable {
   }()
 
   public var id: RequestID { requestID }
+
+  public init(screenStaticID: ScreenStaticID, view: AnyView) {
+    self.screenStaticID = screenStaticID
+    self.view = view
+  }
 
   public struct Kind: Hashable, Codable, CustomStringConvertible {
     public var description: String { rawValue }

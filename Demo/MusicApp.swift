@@ -16,7 +16,7 @@ struct MusicApp: App {
   var body: some Scene {
     WindowGroup {
       TabScreen()
-        .environment(myMusicApp)
+        .environmentObject(myMusicApp)
         .onAppear {
           Screens.browser = browser
           browser.connect()
@@ -27,8 +27,7 @@ struct MusicApp: App {
   }
 }
 
-@Observable
-final class MyMusicApp {
+final class MyMusicApp: ObservableObject {
   var favorite: [Song] = [.aristocrat, .elPoblema, .someSong]
   var playlists: [Playlist] = [.favorite, .relax]
   var all: [Song] = .allSongs
@@ -44,8 +43,7 @@ final class MyMusicApp {
   }
 }
 
-@Observable
-final class Song: Identifiable, Equatable {
+final class Song: ObservableObject, Identifiable, Equatable {
   static func == (lhs: Song, rhs: Song) -> Bool {
     lhs.id == rhs.id
   }
@@ -67,8 +65,7 @@ final class Song: Identifiable, Equatable {
   }
 }
 
-@Observable
-final class Musicant: Equatable {
+final class Musicant: ObservableObject, Equatable {
   static func == (lhs: Musicant, rhs: Musicant) -> Bool {
     lhs.name == rhs.name
   }
@@ -80,8 +77,7 @@ final class Musicant: Equatable {
   }
 }
 
-@Observable
-final class Playlist: Identifiable {
+final class Playlist: ObservableObject, Identifiable {
   var id: String { title }
   let songs: [Song]
   let title: String

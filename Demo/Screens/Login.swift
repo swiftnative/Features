@@ -7,7 +7,7 @@ import SwiftUI
 
 @Screen(alias: "Login", path: "login")
 struct LoginForm: View {
-  @Environment(MyMusicApp.self) var app
+  @EnvironmentObject var app: MyMusicApp
 
   var screenBody: some View {
     ZStack {
@@ -15,7 +15,7 @@ struct LoginForm: View {
         .edgesIgnoringSafeArea(.all)
       Button("Login") {
         app.logIn()
-        Screens.current.close()
+        Screens.current.dismiss()
       }
       .buttonStyle(.bordered)
     }
@@ -28,5 +28,5 @@ struct LoginForm: View {
 
 #Preview {
   LoginForm()
-    .environment(MyMusicApp())
+    .environmentObject(MyMusicApp())
 }

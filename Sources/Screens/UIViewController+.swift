@@ -14,9 +14,9 @@ extension UIViewController {
     navigationController
   }
 
-  var innerNC: UINavigationController? {
-    parent?.firstNavigationController
-  }
+//  var innerNC: UINavigationController? {
+//    parent?.firstNavigationController
+//  }
 
   var rootParent: UIViewController? {
 
@@ -40,6 +40,23 @@ extension UIViewController {
         for child in uiVC.children {
           guard let nc = scan(uiVC: child) else { continue }
           return nc
+        }
+      }
+      return nil
+    }
+
+    return scan(uiVC: self)
+  }
+
+  var firstTabBarController: UITabBarController? {
+
+    func scan(uiVC: UIViewController) -> UITabBarController? {
+      if let tbc = uiVC as? UITabBarController {
+        return tbc
+      } else {
+        for child in uiVC.children {
+          guard let tbc = scan(uiVC: child) else { continue }
+          return tbc
         }
       }
       return nil
@@ -120,6 +137,13 @@ extension UIViewController {
     }
   }
 }
+
+extension Int {
+  var pointer: String {
+    String(format:"%p", self)
+  }
+}
+
 
 private var uuidKey: UInt8 = 0
 

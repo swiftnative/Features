@@ -16,6 +16,9 @@ struct ScreenNavigationDestinationModifier: ViewModifier {
     content
       .push(item: $controller.pushNavigationDestination) { $0.view }
       .preference(key: ScreenNavigationDestinationPreferenceKey.self, value: true)
+      .onAppear {
+        controller.screenDestinationOnAppear()
+      }
   }
 }
 

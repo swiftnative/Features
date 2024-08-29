@@ -9,7 +9,7 @@ import SwiftUI
 struct InfoScreen: View {
   @Environment(\.color) var color
   @Environment(\.dismiss) var dismiss
-  @Environment(MyMusicApp.self) var app
+  @EnvironmentObject var app: MyMusicApp
 
   var screenBody: some View {
     ZStack {
@@ -34,5 +34,5 @@ struct InfoScreen: View {
 
 #Preview {
   InfoScreen()
-    .environment(MyMusicApp())
+    .environmentObject(MyMusicApp())
 }

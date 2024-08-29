@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -13,6 +13,12 @@
 		4F0221E12C5A7A62009EA375 /* Login.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0221E02C5A7A62009EA375 /* Login.swift */; };
 		4F0221E42C5A7BE4009EA375 /* ChoseTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0221E32C5A7BE4009EA375 /* ChoseTheme.swift */; };
 		4F0221E62C5A857C009EA375 /* SongListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0221E52C5A857C009EA375 /* SongListView.swift */; };
+		4F6B3F182C7B95A00027D8A2 /* UseCases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6B3F172C7B95A00027D8A2 /* UseCases.swift */; };
+		4F6B3F1B2C7B96070027D8A2 /* PushOnAppear+Screens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6B3F1A2C7B96070027D8A2 /* PushOnAppear+Screens.swift */; };
+		4F6B3F2E2C7BCF910027D8A2 /* TestScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6B3F2D2C7BCF910027D8A2 /* TestScreen.swift */; };
+		4F6B3F372C7CD67F0027D8A2 /* InStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6B3F362C7CD67F0027D8A2 /* InStack.swift */; };
+		4F6B3F3B2C7CD6CD0027D8A2 /* PushOnAppear+Native.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6B3F3A2C7CD6CD0027D8A2 /* PushOnAppear+Native.swift */; };
+		4F6B3F3D2C7CE49B0027D8A2 /* PresentationDetents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6B3F3C2C7CE49B0027D8A2 /* PresentationDetents.swift */; };
 		4F8C89842C3D814200036416 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8C89832C3D814200036416 /* Settings.swift */; };
 		4F94ED052C38765800CDE243 /* MusicApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F94ED042C38765800CDE243 /* MusicApp.swift */; };
 		4F94ED072C38765800CDE243 /* Library.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F94ED062C38765800CDE243 /* Library.swift */; };
@@ -29,6 +35,16 @@
 		4FFC71C42C5E837800586EF6 /* MusicApp+ScreensDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FFC71C32C5E837800586EF6 /* MusicApp+ScreensDelegate.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		4F6B3F262C7BA14B0027D8A2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4F94ECF92C38765800CDE243 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4F94ED002C38765800CDE243;
+			remoteInfo = DemoScreens;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		4F0221D92C59BE9E009EA375 /* MyMusic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyMusic.swift; sourceTree = "<group>"; };
 		4F0221DB2C59BF55009EA375 /* Song.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Song.swift; sourceTree = "<group>"; };
@@ -36,6 +52,13 @@
 		4F0221E02C5A7A62009EA375 /* Login.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Login.swift; sourceTree = "<group>"; };
 		4F0221E32C5A7BE4009EA375 /* ChoseTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChoseTheme.swift; sourceTree = "<group>"; };
 		4F0221E52C5A857C009EA375 /* SongListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongListView.swift; sourceTree = "<group>"; };
+		4F6B3F172C7B95A00027D8A2 /* UseCases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UseCases.swift; sourceTree = "<group>"; };
+		4F6B3F1A2C7B96070027D8A2 /* PushOnAppear+Screens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PushOnAppear+Screens.swift"; sourceTree = "<group>"; };
+		4F6B3F202C7BA14B0027D8A2 /* DemoScreensUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DemoScreensUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4F6B3F2D2C7BCF910027D8A2 /* TestScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestScreen.swift; sourceTree = "<group>"; };
+		4F6B3F362C7CD67F0027D8A2 /* InStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InStack.swift; sourceTree = "<group>"; };
+		4F6B3F3A2C7CD6CD0027D8A2 /* PushOnAppear+Native.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PushOnAppear+Native.swift"; sourceTree = "<group>"; };
+		4F6B3F3C2C7CE49B0027D8A2 /* PresentationDetents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationDetents.swift; sourceTree = "<group>"; };
 		4F8C89832C3D814200036416 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		4F94ED012C38765800CDE243 /* DemoScreens.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DemoScreens.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F94ED042C38765800CDE243 /* MusicApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicApp.swift; sourceTree = "<group>"; };
@@ -52,7 +75,18 @@
 		4FFC71C32C5E837800586EF6 /* MusicApp+ScreensDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MusicApp+ScreensDelegate.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		4F6B3F212C7BA14B0027D8A2 /* DemoScreensUITests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = DemoScreensUITests; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
+		4F6B3F1D2C7BA14B0027D8A2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4F94ECFE2C38765800CDE243 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -79,14 +113,35 @@
 				4FFC71B52C5AC60800586EF6 /* Musicant.swift */,
 				4F0221E32C5A7BE4009EA375 /* ChoseTheme.swift */,
 				4FFC71B12C5A952100586EF6 /* Info.swift */,
+				4F6B3F172C7B95A00027D8A2 /* UseCases.swift */,
 			);
 			path = Screens;
+			sourceTree = "<group>";
+		};
+		4F6B3F192C7B95F70027D8A2 /* UseCases */ = {
+			isa = PBXGroup;
+			children = (
+				4F6B3F1A2C7B96070027D8A2 /* PushOnAppear+Screens.swift */,
+				4F6B3F3A2C7CD6CD0027D8A2 /* PushOnAppear+Native.swift */,
+			);
+			path = UseCases;
+			sourceTree = "<group>";
+		};
+		4F6B3F352C7CD6740027D8A2 /* Modifiers */ = {
+			isa = PBXGroup;
+			children = (
+				4FFC71B32C5AC45000586EF6 /* CloseButton.swift */,
+				4F6B3F362C7CD67F0027D8A2 /* InStack.swift */,
+				4F6B3F3C2C7CE49B0027D8A2 /* PresentationDetents.swift */,
+			);
+			path = Modifiers;
 			sourceTree = "<group>";
 		};
 		4F94ECF82C38765800CDE243 = {
 			isa = PBXGroup;
 			children = (
 				4F94ED032C38765800CDE243 /* Demo */,
+				4F6B3F212C7BA14B0027D8A2 /* DemoScreensUITests */,
 				4F94ED022C38765800CDE243 /* Products */,
 				4F94ED122C3876A300CDE243 /* Frameworks */,
 			);
@@ -96,6 +151,7 @@
 			isa = PBXGroup;
 			children = (
 				4F94ED012C38765800CDE243 /* DemoScreens.app */,
+				4F6B3F202C7BA14B0027D8A2 /* DemoScreensUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -103,15 +159,17 @@
 		4F94ED032C38765800CDE243 /* Demo */ = {
 			isa = PBXGroup;
 			children = (
+				4F6B3F352C7CD6740027D8A2 /* Modifiers */,
+				4F6B3F192C7B95F70027D8A2 /* UseCases */,
 				4F0221E22C5A7B66009EA375 /* Screens */,
 				4F94ED172C387F0600CDE243 /* Info.plist */,
 				4F94ED042C38765800CDE243 /* MusicApp.swift */,
 				4FFC71C32C5E837800586EF6 /* MusicApp+ScreensDelegate.swift */,
-				4FFC71B32C5AC45000586EF6 /* CloseButton.swift */,
 				4F94ED082C38765900CDE243 /* Assets.xcassets */,
 				4F94ED0A2C38765900CDE243 /* Preview Content */,
 				4F0221E52C5A857C009EA375 /* SongListView.swift */,
 				4F94ED1A2C389A2900CDE243 /* StarView.swift */,
+				4F6B3F2D2C7BCF910027D8A2 /* TestScreen.swift */,
 			);
 			path = Demo;
 			sourceTree = "<group>";
@@ -134,6 +192,29 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		4F6B3F1F2C7BA14B0027D8A2 /* DemoScreensUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4F6B3F282C7BA14B0027D8A2 /* Build configuration list for PBXNativeTarget "DemoScreensUITests" */;
+			buildPhases = (
+				4F6B3F1C2C7BA14B0027D8A2 /* Sources */,
+				4F6B3F1D2C7BA14B0027D8A2 /* Frameworks */,
+				4F6B3F1E2C7BA14B0027D8A2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4F6B3F272C7BA14B0027D8A2 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				4F6B3F212C7BA14B0027D8A2 /* DemoScreensUITests */,
+			);
+			name = DemoScreensUITests;
+			packageProductDependencies = (
+			);
+			productName = DemoScreensUITests;
+			productReference = 4F6B3F202C7BA14B0027D8A2 /* DemoScreensUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		4F94ED002C38765800CDE243 /* DemoScreens */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4F94ED0F2C38765900CDE243 /* Build configuration list for PBXNativeTarget "DemoScreens" */;
@@ -162,9 +243,13 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1600;
+				LastSwiftUpdateCheck = 1610;
 				LastUpgradeCheck = 1600;
 				TargetAttributes = {
+					4F6B3F1F2C7BA14B0027D8A2 = {
+						CreatedOnToolsVersion = 16.1;
+						TestTargetID = 4F94ED002C38765800CDE243;
+					};
 					4F94ED002C38765800CDE243 = {
 						CreatedOnToolsVersion = 16.0;
 					};
@@ -187,11 +272,19 @@
 			projectRoot = "";
 			targets = (
 				4F94ED002C38765800CDE243 /* DemoScreens */,
+				4F6B3F1F2C7BA14B0027D8A2 /* DemoScreensUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		4F6B3F1E2C7BA14B0027D8A2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4F94ECFF2C38765800CDE243 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -204,23 +297,36 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		4F6B3F1C2C7BA14B0027D8A2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4F94ECFD2C38765800CDE243 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				4F0221E42C5A7BE4009EA375 /* ChoseTheme.swift in Sources */,
 				4F0221DE2C59C1A4009EA375 /* Playlist.swift in Sources */,
+				4F6B3F1B2C7B96070027D8A2 /* PushOnAppear+Screens.swift in Sources */,
+				4F6B3F2E2C7BCF910027D8A2 /* TestScreen.swift in Sources */,
 				4F0221DA2C59BE9E009EA375 /* MyMusic.swift in Sources */,
 				4FFC71B22C5A952100586EF6 /* Info.swift in Sources */,
 				4FFC71C42C5E837800586EF6 /* MusicApp+ScreensDelegate.swift in Sources */,
 				4F94ED072C38765800CDE243 /* Library.swift in Sources */,
+				4F6B3F182C7B95A00027D8A2 /* UseCases.swift in Sources */,
 				4FFC71B62C5AC60800586EF6 /* Musicant.swift in Sources */,
+				4F6B3F3D2C7CE49B0027D8A2 /* PresentationDetents.swift in Sources */,
 				4F0221E62C5A857C009EA375 /* SongListView.swift in Sources */,
 				4FFC71B42C5AC45000586EF6 /* CloseButton.swift in Sources */,
 				4F94ED192C38997D00CDE243 /* Tab.swift in Sources */,
 				4F94ED1B2C389A2900CDE243 /* StarView.swift in Sources */,
 				4F0221E12C5A7A62009EA375 /* Login.swift in Sources */,
+				4F6B3F372C7CD67F0027D8A2 /* InStack.swift in Sources */,
 				4F94ED052C38765800CDE243 /* MusicApp.swift in Sources */,
+				4F6B3F3B2C7CD6CD0027D8A2 /* PushOnAppear+Native.swift in Sources */,
 				4FFC71B82C5AD0B700586EF6 /* Search.swift in Sources */,
 				4F0221DC2C59BF55009EA375 /* Song.swift in Sources */,
 				4F8C89842C3D814200036416 /* Settings.swift in Sources */,
@@ -229,7 +335,51 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		4F6B3F272C7BA14B0027D8A2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4F94ED002C38765800CDE243 /* DemoScreens */;
+			targetProxy = 4F6B3F262C7BA14B0027D8A2 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		4F6B3F292C7BA14B0027D8A2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3BVL9BNASU;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = alexejnenastev.DemoScreensUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = DemoScreens;
+			};
+			name = Debug;
+		};
+		4F6B3F2A2C7BA14B0027D8A2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3BVL9BNASU;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = alexejnenastev.DemoScreensUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = DemoScreens;
+			};
+			name = Release;
+		};
 		4F94ED0D2C38765900CDE243 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -366,7 +516,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -397,7 +547,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -414,6 +564,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		4F6B3F282C7BA14B0027D8A2 /* Build configuration list for PBXNativeTarget "DemoScreensUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4F6B3F292C7BA14B0027D8A2 /* Debug */,
+				4F6B3F2A2C7BA14B0027D8A2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		4F94ECFC2C38765800CDE243 /* Build configuration list for PBXProject "DemoScreens" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

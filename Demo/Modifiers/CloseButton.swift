@@ -9,7 +9,7 @@ import ScreensUI
 struct CloseButton: View {
     var body: some View {
       Button("", systemImage: "xmark.circle.fill") {
-        Screens.current.close()
+        Screens.current.dismiss()
       }
     }
 }

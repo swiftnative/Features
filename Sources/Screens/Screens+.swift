@@ -23,12 +23,16 @@ public extension Screens {
     delegate.action(.push, screen: screen, params: nil)
   }
 
-  static func fullScreen<S: Screen>(_ screen: S) {
+  static func fullscreen<S: Screen>(_ screen: S) {
     delegate.action(.fullscreen, screen: screen, params: nil)
   }
 
   static func sheet<S: Screen>(_ screen: S) {
     delegate.action(.sheet, screen: screen, params: nil)
+  }
+
+  static func dismiss() {
+    delegate.action(.dismiss, screen: EmptyScreen(), params: nil)
   }
 }
 
