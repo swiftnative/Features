@@ -8,18 +8,21 @@ import Foundation
 public struct ScreenLiveInfo: Hashable, Codable {
   public let staticID: ScreenStaticID
   public let screenID: ScreenID
-  public let tag: String?
-  public let children: [ScreenID]
-  public let size: ScreeSize
-  public let parentScreenID: ScreenID?
-  public let state: ScreenState
-  public let stack: NavigationStackInfo?
-  public let info: String
-  public var type: String { staticID.type }
-  public var file: String { staticID.file }
   public let alias: String?
+  public let parentScreenID: ScreenID?
+  public let tag: String?
   public let hasParentVC: Bool
   public let hasNavigationDestination: Bool
+
+  public let size: ScreeSize
+  public let state: ViewState
+  public let stack: NavigationStackInfo?
+  public let appearance: ScreenAppearance
+  public let info: String
+
+
+  public var type: String { staticID.type }
+  public var file: String { staticID.file }
 
 
   public init(screenID: ScreenID,
@@ -28,11 +31,11 @@ public struct ScreenLiveInfo: Hashable, Codable {
               tag: String?,
               parentScreenID: ScreenID?,
               hasParentVC: Bool = true,
-              state: ScreenState,
+              state: ViewState,
               hasNavigationDestination: Bool = false,
               size: ScreeSize,
               stack: NavigationStackInfo?,
-              children: [ScreenID] = [],
+              appearance: ScreenAppearance,
               info: String) {
     self.screenID = screenID
     self.staticID = staticID
@@ -45,7 +48,7 @@ public struct ScreenLiveInfo: Hashable, Codable {
     self.size = size
     self.stack = stack
     self.info = info
-    self.children = children
+    self.appearance = appearance
   }
 }
 

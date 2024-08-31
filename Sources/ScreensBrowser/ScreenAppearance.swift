@@ -6,14 +6,14 @@
 //
 import SwiftUI
 
-public struct ScreenAppearance: CustomStringConvertible {
+public struct ScreenAppearance: Codable, Hashable, CustomStringConvertible {
 
   public var appearance: Appearance = .other
   public var isFirstAppearance: Bool { count < 2 }
   public var count: Int = 0
   public var firstAppearance: Appearance = .other
 
-  public enum Appearance: CustomStringConvertible {
+  public enum Appearance: Codable, CustomStringConvertible {
     case poppedTo
     case other
     case pushed
@@ -34,4 +34,6 @@ public struct ScreenAppearance: CustomStringConvertible {
   public var description: String {
     appearance.description + ( isFirstAppearance ? " firstTime" : "")
   }
+
+  public init() {}
 }

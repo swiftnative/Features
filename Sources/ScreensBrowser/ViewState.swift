@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct ScreenState: Codable, Hashable {
+public struct ViewState: Codable, Hashable {
   public var isPresented: Bool
   public var isAppeared: Bool {
     didSet {
@@ -30,7 +30,7 @@ public struct ScreenState: Codable, Hashable {
     }
 }
 
-extension ScreenState: CustomDebugStringConvertible {
+extension ViewState: CustomDebugStringConvertible {
   public var debugDescription: String {
     "p:\(isPresented) a:\(isAppeared)"
   }

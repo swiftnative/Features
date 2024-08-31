@@ -32,7 +32,7 @@ public struct ScreenModifier: ViewModifier {
         controller?.onDissappear()
       }
       .onChange(of: isPresented, perform: { [weak controller] _ in
-        controller?.isPresented = isPresented
+        controller?.state.isPresented = isPresented
       })
       .background {
         ViewControllerAccessor(controller: controller)
@@ -42,7 +42,7 @@ public struct ScreenModifier: ViewModifier {
       })
       .onAppear { [weak controller] in
         controller?.parentScreenID = parentScreenID == .zero ? nil : parentScreenID
-        controller?.isPresented = isPresented
+        controller?.state.isPresented = isPresented
         controller?.onAppear()
       }
 

@@ -44,7 +44,7 @@ public final class Screens: NSObject, ObservableObject {
     let appeared = controllers.all().filter {
       $0.state.isAppeared &&
       $0.parent != nil && /// иначе при таббаре появляются контроллеры которые становятся активными но при этом ни разу не показывались
-      !$0.isDesappearing }
+      !$0.isDisappearing }
     let node = appeared.sorted(by: { $0.state.lastAppeared > $1.state.lastAppeared }).first
 
     return node
