@@ -302,6 +302,7 @@ extension ScreenController {
                    size: ScreeSize(size: parent?.view.frame.size ?? view.frame.size),
                    stack: stackInfo,
                    appearance: appearance,
+                   isPresented: isPresented,
                    info: info)
   }
 

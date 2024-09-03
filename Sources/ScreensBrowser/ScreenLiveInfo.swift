@@ -17,6 +17,7 @@ public struct ScreenLiveInfo: Hashable, Codable {
   public let size: ScreeSize
   public let stack: NavigationStackInfo?
   public let appearance: ScreenAppearance
+  public let isPresented: Bool
   public let info: String
 
 
@@ -34,6 +35,7 @@ public struct ScreenLiveInfo: Hashable, Codable {
               size: ScreeSize,
               stack: NavigationStackInfo?,
               appearance: ScreenAppearance,
+              isPresented: Bool,
               info: String) {
     self.screenID = screenID
     self.staticID = staticID
@@ -46,6 +48,7 @@ public struct ScreenLiveInfo: Hashable, Codable {
     self.stack = stack
     self.info = info
     self.appearance = appearance
+    self.isPresented = isPresented
   }
 }
 
