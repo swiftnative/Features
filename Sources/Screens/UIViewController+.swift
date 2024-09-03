@@ -14,10 +14,6 @@ extension UIViewController {
     navigationController
   }
 
-//  var innerNC: UINavigationController? {
-//    parent?.firstNavigationController
-//  }
-
   var rootParent: UIViewController? {
 
     func scan(uiVC: UIViewController) -> UIViewController? {
@@ -102,6 +98,15 @@ extension UIViewController {
     info["isMovingToParent"] = isMovingToParent.description
     info["isMovingFromParent"] = isMovingFromParent.description
     info["isBeingPresented"] = isBeingPresented.description
+    if let tabBarController {
+      info["TabBarController"] = tabBarController.vcID.pointer
+    }
+
+
+
+    if !children.isEmpty {
+      info["children"] = children.map{ $0.vcID.pointer }.joined(separator: ",")
+    }
 
     return ViewController(id: vcID,
                           type: vcType,

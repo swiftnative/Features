@@ -9,6 +9,12 @@ import ScreensBrowser
 import SwiftUI
 import Combine
 
+extension Logger {
+  static let screens  = Logger(subsystem: "screens", category: "screens")
+  static let uikit = Logger(subsystem: "screens", category: "uikit")
+  static let swiftui = Logger(subsystem: "screens", category: "swiftui")
+}
+
 public final class ScreenController: UIViewController, ObservableObject {
   /// Let
   public let id: ScreenID = .newScreenID
@@ -22,22 +28,48 @@ public final class ScreenController: UIViewController, ObservableObject {
   /// Var
   var tag: ScreenTag?
   var hasNavigationDestination: Bool = false
-  var state: ViewState
+  var isPresented: Bool
 
   /// View Communcation
   let doDismiss = PassthroughSubject<Void, Never>()
   let onScreenAppear = PassthroughSubject<ScreenAppearance, Never>()
 
-  let logger = Logger(subsystem: "screens", category: "screens")
-
-  private var detached: Bool { parent == nil }
+  var detached: Bool { parent == nil }
   private(set) var appearance = ScreenAppearance()
 
   /// Navigation
   @Published var fullcreen: ScreenAppearRequest?
   @Published var sheet: ScreenAppearRequest?
-  @Published var pushOuter: ScreenAppearRequest?
-  @Published var pushNavigationDestination: ScreenAppearRequest?
+
+  @Published var pushOuter: ScreenAppearRequest? {
+    willSet {
+      if let pushOuter, newValue != nil  {
+        Logger.screens.error("[\(self.logID)] unextected pushOuter is not nil (\(pushOuter.debugDescription)), when push \(newValue.debugDescription)")
+      }
+    }
+    didSet {
+      if let pushOuter  {
+        Logger.swiftui.debug("\(self.logID) set new pushOuter \(pushOuter.debugDescription)")
+      } else  {
+        Logger.swiftui.debug("\(self.logID) clear pushOuter")
+      }
+    }
+  }
+
+  @Published var pushNavigationDestination: ScreenAppearRequest? {
+    willSet {
+      if let pushNavigationDestination, newValue != nil  {
+        Logger.screens.error("[\(self.logID)] unextected pushNavigationDestination is not nil (\(pushNavigationDestination.debugDescription)), when push \(pushNavigationDestination.debugDescription)")
+      }
+    }
+    didSet {
+      if let pushNavigationDestination  {
+        Logger.swiftui.debug("\(self.logID) set new pushNavigationDestination \(pushNavigationDestination.debugDescription)")
+      } else  {
+        Logger.swiftui.debug("\(self.logID) clear pushNavigationDestination")
+      }
+    }
+  }
 
   /// ``CustomStringConvertable``
   public override var description: String { "\(logID)-\(self.vcID.pointer)" }
@@ -48,15 +80,26 @@ public final class ScreenController: UIViewController, ObservableObject {
     parent?.children.first { $0 is UINavigationController } as? UINavigationController
   }
 
+  var isTabBar: Bool {
+    parent?.children.first { $0 is UITabBarController } != nil
+  }
+
+  var parentScreen: ScreenController? {
+    guard let parentScreenID else { return nil }
+    return Screens.shared.screen(by: parentScreenID)
+  }
+
   private(set) var isAppearing: Bool = false
   private(set) var isDisappearing: Bool = false
   private var notifiedWillPoppedBack = false
 
-  init(staticID: ScreenStaticID, alias: String?) {
+  init(staticID: ScreenStaticID, alias: String?, parentScreenID: ScreenID? = nil, isPresented: Bool = false) {
     self.staticID = staticID
+    self.parentScreenID = parentScreenID
     self.alias = alias
-    self.state = .init()
+    self.isPresented = isPresented
     self.screenInfo = ScreenInfo(id: id, type: staticID.type)
+    Logger.screens.debug("\(staticID.type)[\(self.id)] init")
     super.init(nibName: nil, bundle: nil)
   }
 
@@ -65,57 +108,135 @@ public final class ScreenController: UIViewController, ObservableObject {
   }
 
   deinit {
-    logger.debug("\(self.logID) deinit")
+    Logger.screens.debug("\(self.logID) deinit")
+    fullcreen = nil
+    sheet = nil
+    pushOuter = nil
+    pushNavigationDestination = nil
     Screens.shared.screen(removed: id)
   }
 
-  //MARK: View events
-
+  //MARK: SwiftUI
   func screenDestinationOnAppear() {
     guard !isAppearing, innerNC != nil else { return }
-    logger.debug("\(self.logID) screenDestinationOnAppear")
-    appearance.count += 1
+    Logger.screens.debug("\(self.logID) screenDestinationOnAppear")
+
     if !appearance.isFirstAppearance {
-      screenWillAppear()
+      screenDidAppear()
     }
   }
 
   func onAppear() {
-    logger.debug("\(self.logID) onAppear \(self.detached ? "(detached)" : "") \(self.state.isPresented ? "(presented)" : "")")
     isAppearing = true
-    appearance.count += 1
+    Logger.screens.debug("\(self.logID) onAppear \(self.detached ? "(detached)" : "") \(self.isPresented ? "(presented)" : "")")
 
-    if !appearance.isFirstAppearance {
-      screenWillAppear()
+    if appearance.isFirstAppearance  {
+      detectFirstAppearance()
+    } else {
+      screenDidAppear()
     }
-
-    state.isAppeared = true
   }
 
   func onDissappear() {
-    logger.debug("\(self.logID) onDissappear")
-    self.state.isAppeared = false
+    Logger.swiftui.debug("\(self.logID) onDissappear")
+    self.appearance.appearance = .dissapeared
     Screens.shared.screen(kind: .didDisappear, for: self)
     Screens.shared.screen(stateUpdated: self)
   }
 
-  // MARK: Public
+  func onIsPresentedChanged(_ newValue: Bool) {
+    Logger.swiftui.debug("\(self.logID) onIsPresentedChanged \(newValue)")
+    self.isPresented = newValue
+  }
 
   public func dismiss() {
     doDismiss.send()
   }
 
-  // MARK: Private
 
-  private func screenWillAppear() {
+  //MARK: UIKit
+
+  public override func viewDidLoad() {
+    super.viewDidLoad()
+    Logger.uikit.debug("\(self.logID) viewDidLoad")
+    Screens.shared.screen(created: self)
+  }
+
+  public override func viewWillAppear(_ animated: Bool) {
+    isAppearing = true
+    /// isDisappearing  - its case when cancel swipe gesture for poping back in stack
+    if appearance.isFirstAppearance || isDisappearing  {
+      screenDidAppear()
+    }
+    Logger.uikit.debug("\(self.logID) viewWillAppear [p:\(self.isBeingPresented) d:\(self.isBeingDismissed) mtp:\(self.isMovingToParent) mfp:\(self.isMovingFromParent)] ")
+    super.viewWillAppear(animated)
+  }
+
+  public override func viewWillDisappear(_ animated: Bool) {
+    isDisappearing = true
+    notifyIfPoped()
+    Logger.uikit.debug("\(self.logID) viewWillDisappear [p:\(self.isBeingPresented) d:\(self.isBeingDismissed) mtp:\(self.isMovingToParent) mfp:\(self.isMovingFromParent)]")
+    super.viewWillDisappear(animated)
+  }
+
+  public override func viewDidAppear(_ animated: Bool) {
+    isAppearing = false
+    isDisappearing = false
+    Logger.uikit.debug("\(self.logID) viewDidAppear [p:\(self.isBeingPresented) d:\(self.isBeingDismissed) mtp:\(self.isMovingToParent) mfp:\(self.isMovingFromParent)]")
+    super.viewDidAppear(animated)
+  }
+
+  public override func viewDidDisappear(_ animated: Bool) {
+    isDisappearing = false
+    isAppearing = false
+    Logger.uikit.debug("\(self.logID) viewDidDisappear [p:\(self.isBeingPresented) d:\(self.isBeingDismissed) mtp:\(self.isMovingToParent) mfp:\(self.isMovingFromParent)]")
+    Screens.shared.screen(stateUpdated: self)
+    super.viewDidDisappear(animated)
+  }
+
+  public override func didMove(toParent parent: UIViewController?) {
+    Logger.uikit.debug("\(self.logID) didMove to:\(parent)")
+    super.didMove(toParent: parent)
+  }
+
+  public override func willMove(toParent parent: UIViewController?) {
+    Logger.uikit.debug("\(self.logID) willMove to:\(parent)")
+    super.willMove(toParent: parent)
+  }
+
+  // MARK: Private Magic
+
+  private func detectFirstAppearance() {
+    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(30)) { [weak self] in
+      self?.doFirstAppearanceIfNeed()
+    }
+  }
+
+  private func doFirstAppearanceIfNeed() {
+    guard appearance.isFirstAppearance && detached else { return }
+
+    if let parentScreen, parentScreen.isTabBar {
+      return // apperance will happened when switched to this screen
+    }
+
+    screenDidAppear()
+  }
+
+  private func screenDidAppear() {
 
     if appearance.isFirstAppearance {
-      if navigationController != nil {
+      if parentScreen?.parent == parent {
+        appearance.firstAppearance = .nested
+      } else if navigationController != nil {
         appearance.firstAppearance = .pushed
       } else if sheetPresentationController != nil, presentingViewController != nil {
         appearance.firstAppearance = .sheet
       } else if presentingViewController != nil {
         appearance.firstAppearance = .fullscreen
+      } else if !self.isPresented {
+        appearance.firstAppearance = .nested
+      } else {
+        appearance.firstAppearance = .other
       }
       appearance.appearance = appearance.firstAppearance
     } else {
@@ -127,14 +248,15 @@ public final class ScreenController: UIViewController, ObservableObject {
       }
     }
 
+    appearance.count += 1
+    isAppearing = false
     DispatchQueue.main.async {
-      self.logger.debug("\(self.logID) will ScreenAppear \(self.appearance.description)")
+      Logger.screens.debug("\(self.logID) appear via: \(self.appearance.description)")
       self.onScreenAppear.send(self.appearance)
+      Screens.shared.screen(kind: .didAppear(detached: self.detached, appearance: self.appearance), for: self)
+      Screens.shared.screen(stateUpdated: self)
+      self.screenshot()
     }
-
-    Screens.shared.screen(kind: .didAppear(detached: detached), for: self)
-    Screens.shared.screen(stateUpdated: self)
-    screenshot()
   }
 
   private func notifyIfPoped() {
@@ -156,55 +278,6 @@ public final class ScreenController: UIViewController, ObservableObject {
 
     notifyScreenController(vcs: ncParent.children)
   }
-
-
-  //MARK: UIViewController Life cycle
-
-  public override func viewDidLoad() {
-    super.viewDidLoad()
-    //    logger.debug("\(self.logID) viewDidLoad")
-    Screens.shared.screen(created: self)
-    state.isAppeared = true
-  }
-
-  public override func viewWillAppear(_ animated: Bool) {
-    isAppearing = true
-    if appearance.isFirstAppearance {
-      screenWillAppear()
-    }
-    logger.debug("\(self.logID) viewWillAppear [p:\(self.isBeingPresented) d:\(self.isBeingDismissed) mtp:\(self.isMovingToParent) mfp:\(self.isMovingFromParent)] ")
-    super.viewWillAppear(animated)
-  }
-
-  public override func viewWillDisappear(_ animated: Bool) {
-    isDisappearing = true
-    notifyIfPoped()
-    logger.debug("\(self.logID) viewWillDisappear [p:\(self.isBeingPresented) d:\(self.isBeingDismissed) mtp:\(self.isMovingToParent) mfp:\(self.isMovingFromParent)]")
-    super.viewWillDisappear(animated)
-  }
-
-  public override func viewDidAppear(_ animated: Bool) {
-    super.viewDidAppear(animated)
-    isAppearing = false
-    isDisappearing = false
-    logger.debug("\(self.logID) viewDidAppear [p:\(self.isBeingPresented) d:\(self.isBeingDismissed) mtp:\(self.isMovingToParent) mfp:\(self.isMovingFromParent)]")
-
-  }
-
-  public override func viewDidDisappear(_ animated: Bool) {
-    super.viewDidDisappear(animated)
-    isDisappearing = false
-    isAppearing = false
-    logger.debug("\(self.logID) viewDidDisappear [p:\(self.isBeingPresented) d:\(self.isBeingDismissed) mtp:\(self.isMovingToParent) mfp:\(self.isMovingFromParent)]")
-  }
-
-  public override func didMove(toParent parent: UIViewController?) {
-    if self.parent != parent {
-      logger.debug("\(self.logID) didMove to:\(parent)")
-      Screens.shared.screen(stateUpdated: self)
-    }
-   super.didMove(toParent: parent)
-  }
 }
 
 //MARK: ScreenBrowser+
@@ -215,7 +288,7 @@ extension ScreenController {
   }
 
   var nodeDebugDescription: String {
-    "\(nodeDebugName) \(state) parent:\(parentScreenID?.description ?? "")"
+    "\(nodeDebugName) parent:\(parentScreenID?.description ?? "")"
   }
 
   var dto: ScreenLiveInfo {
@@ -225,7 +298,6 @@ extension ScreenController {
                    tag: tag,
                    parentScreenID: parentScreenID,
                    hasParentVC: parent != nil,
-                   state:  state,
                    hasNavigationDestination: hasNavigationDestination,
                    size: ScreeSize(size: parent?.view.frame.size ?? view.frame.size),
                    stack: stackInfo,

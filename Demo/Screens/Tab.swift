@@ -18,9 +18,7 @@ struct TabScreen {
           Label("Library", systemImage: "books.vertical")
         }
 
-      ScreenStack {
         UseCasesScreen()
-      }
       .tabItem {
         Label("Use Cases", systemImage: "scribble.variable")
       }

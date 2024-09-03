@@ -9,7 +9,7 @@ public struct ScreenEvent: CustomStringConvertible, Codable {
   let kind: Kind
 
   public enum Kind: Codable, CustomStringConvertible {
-    case didAppear(detached: Bool)
+    case didAppear(detached: Bool, appearance: ScreenAppearance)
     case didDisappear
     case willSheet(ScreenStaticID)
     case willFullscreen(ScreenStaticID)
@@ -17,10 +17,10 @@ public struct ScreenEvent: CustomStringConvertible, Codable {
 
     public var description: String {
       switch self {
-      case let .didAppear(detached):
-        return "didAppear" + (detached ? " (detached)" : "")
+      case let .didAppear(detached, appearance):
+        return "appeared \(appearance.appearance.description)" + (detached ? " (detached)" : "")
       case .didDisappear:
-        return "didDisappear"
+        return "disappeared"
       case .willSheet(let screeID):
         return "willSheet \(screeID)"
       case .willFullscreen(let screeID):

@@ -7,6 +7,8 @@
 
 import SwiftUI
 import os
+import ScreensUI
+
 let logger = Logger(subsystem: "screens", category: "Demo")
 
 @Screen(alias: "UseCases")
@@ -18,75 +20,105 @@ struct UseCasesScreen {
 }
 
 private struct UseCasesScreenBody: View {
+  @State var selectedPage: Pages = .navigation
 
-  @State var appearanceInfo = ""
+  enum Pages: String {
+    case navigation
+    case actions
+  }
 
   var body: some View {
-    
-    List {
-      Text(appearanceInfo)
 
-      Section("Base Navigation (Screens.current)") {
-        Text("Used current ScreenProxy to make navigation commands")
+    ScreenStack {
+      VStack {
+        Picker("Tab", selection: $selectedPage) {
+          Text("Navigation")
+            .tag(Pages.navigation)
 
-        Button("Fullscreen") {
-          Screens.current.fullscreen(TestScreenWithStack(), modifier: .closeButton)
+          Text("Actions")
+            .tag(Pages.actions)
         }
-        Button("Sheet (Default detens)") {
-          Screens.current.sheet(TestScreenWithStack(), modifier: .closeButton)
-        }
-
-        Button("Sheet (Only medium)") {
-          Screens.current.sheet(TestScreenWithStack(), modifier: .detents(.medium), .closeButton)
-        }
-
-        Button("Push") {
-          Screens.current.push(TestScreen())
-        }
+        .pickerStyle(SegmentedPickerStyle())
+        .padding(.horizontal)
       }
+      TabView(selection: $selectedPage) {
+        NavigationPage()
+          .tag(Pages.navigation  )
 
-      Section("Base Actions ( Screens)") {
-        Text("Used actions, which behavior can be commonly configured via ScreensDelegate")
-
-        Button("Fullscreen") {
-          Screens.fullscreen(TestScreenWithStack())
-        }
-
-        Button("Sheet") {
-          Screens.sheet(TestScreenWithStack())
-        }
-
-        Button("Push") {
-          Screens.push(TestScreen())
-        }
-
-        NavigationLink {
-          TestScreen()
-        } label: {
-          Text("Push ( SwiftUI )")
-        }
+        ActionsPage()
+          .tag(Pages.actions)
       }
-
-      Section("Push-On-Appearance") {
-        Text("Test behavior when screen pushed right in onAppear for fullscreen presentation")
-
-        Button("Screens") {
-          Screens.current.fullscreen(PushOnAppearScreens(), modifier: .inStack)
-        }
-        Button("Native") {
-          Screens.current.fullscreen(PushOnAppearNative(), modifier: .inStack)
-        }
-      }
+      .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+      .navigationTitle("Screens")
     }
-    .onScreenAppear { appearance in
-      appearanceInfo = appearance.appearance.description + " " + Date.now.formatted(.dateTime.hour().minute().second())
-      logger.debug("UseCases onScreenAppear")
-    }
-    .navigationTitle("Use Cases")
   }
 }
 
+@Screen
+private struct NavigationPage {
 
+  @State var appearanceInfo = ""
+
+  var screenBody: some View {
+    List {
+      Text(appearanceInfo)
+
+      Text("Used current ScreenProxy to make navigation commands")
+
+      Button("Fullscreen") {
+        Screens.current.fullscreen(TestScreenWithStack(), modifier: .closeButton)
+      }
+      Button("Sheet (Default detens)") {
+        Screens.current.sheet(TestScreenWithStack(), modifier: .closeButton)
+      }
+
+      Button("Sheet (Only medium)") {
+        Screens.current.sheet(TestScreenWithStack(), modifier: .detents(.medium), .closeButton)
+      }
+
+      Button("Push") {
+        Screens.current.push(TestScreen())
+      }
+      Button("Push2") {
+        Screens.current.push(TestScreen())
+      }
+
+      NavigationLink {
+        TestScreen()
+      } label: {
+        Text("Push ( SwiftUI )")
+      }
+
+//      Section("Push-On-Appearance") {
+//        Text("Test behavior when screen pushed right in onAppear for fullscreen presentation")
+//
+//        Button("Screens") {
+//          Screens.current.fullscreen(PushOnAppearScreens(), modifier: .inStack)
+//        }
+//        Button("Native") {
+//          Screens.current.fullscreen(PushOnAppearNative(), modifier: .inStack)
+//        }
+//      }
+    }
+    .onScreenAppear { appearance in
+      appearanceInfo = appearance.appearance.description + " " + Date.now.formatted(.dateTime.hour().minute().second())
+      logger.debug("NavigationPage onScreenAppear")
+    }
+  }
+}
+
+@Screen
+private struct ActionsPage {
+
+  @State var appearanceInfo = ""
+
+  var screenBody: some View {
+    Text("Actions")
+      .onScreenAppear { appearance in
+        logger.debug("ActionsPage onScreenAppear")
+      }
+  }
+}
 #Preview {
   UseCasesScreen()
 }

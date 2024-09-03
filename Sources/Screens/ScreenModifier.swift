@@ -3,7 +3,7 @@
 // Copyright © 2024 Alexey Nenastyev (github.com/alexejn). All Rights Reserved.
 import SwiftUI
 import ScreensBrowser
-
+import Combine
 /// Modifier to configure global features behavior
 public struct ScreenModifier: ViewModifier {
 
@@ -31,18 +31,20 @@ public struct ScreenModifier: ViewModifier {
       .onDisappear { [weak controller] in
         controller?.onDissappear()
       }
-      .onChange(of: isPresented, perform: { [weak controller] _ in
-        controller?.state.isPresented = isPresented
+      .onChange(of: isPresented, perform: { [weak controller] newValue in
+        controller?.onIsPresentedChanged(newValue)
       })
       .background {
         ViewControllerAccessor(controller: controller)
+            .frame(width: 0, height: 0)
+            .accessibility(hidden: true)
       }
       .onReceive(controller.doDismiss, perform: { _ in
         dismiss()
       })
       .onAppear { [weak controller] in
         controller?.parentScreenID = parentScreenID == .zero ? nil : parentScreenID
-        controller?.state.isPresented = isPresented
+        controller?.isPresented = isPresented
         controller?.onAppear()
       }
 
@@ -50,13 +52,28 @@ public struct ScreenModifier: ViewModifier {
 }
 
 private struct ViewControllerAccessor: UIViewControllerRepresentable {
-  let controller: ScreenController
+
+  @Binding private var observed: Void // workaround for state changes not triggering view updates
+
+  @ObservedObject var controller: ScreenController
+
+  init(controller: ScreenController) {
+    self._observed = .constant(())
+    self.controller = controller
+  }
 
   func makeUIViewController(context: Context) -> ScreenController {
     controller
   }
 
   func updateUIViewController(_ uiViewController: ScreenController, context: Context) {
+  }
+
+  func dismantleUIViewController(_ uiViewController: ScreenController) {
+    controller.fullcreen = nil
+    controller.sheet = nil
+    controller.pushOuter = nil
+    controller.pushNavigationDestination = nil
   }
 }
 

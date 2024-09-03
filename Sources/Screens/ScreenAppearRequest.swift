@@ -7,7 +7,7 @@
 import Foundation
 import SwiftUI
 
-public struct ScreenAppearRequest: Hashable, Identifiable {
+public struct ScreenAppearRequest: Hashable, Identifiable, CustomDebugStringConvertible {
 
   public typealias RequestID = UInt
 
@@ -46,6 +46,10 @@ public struct ScreenAppearRequest: Hashable, Identifiable {
 
   public func hash(into hasher: inout Hasher) {
       hasher.combine(requestID)
+  }
+
+  public var debugDescription: String {
+    "\(id)-\(screenStaticID)"
   }
 
 }

@@ -8,27 +8,30 @@
 import Foundation
 import SwiftUI
 import ScreensBrowser
+import os
 
 extension ScreenController: ScreenProxy {
 
   private func log(error message: String) {
-    logger.error("[\(self.logID)] \(message)")
+    Logger.screens.error("[\(self.logID)] \(message)")
     Screens.shared.screen(error: "[\(self.logID)] \(message)")
   }
 
   public func push<S, M>(_ screen: S, modifier: M) where S : Screen, M : ViewModifier {
-    logger.debug("[\(self.logID)] will push \(S.self)")
+    Logger.screens.debug("[\(self.logID)] will push \(S.self)")
     Screens.shared.screen(kind: .willPush(S.screenID), for: self)
 
     let view = AnyView(screen.modifier(modifier))
     let request = ScreenAppearRequest(screenStaticID: S.screenID, view: view)
 
-    if hasNavigationDestination {
-      pushNavigationDestination = request
-      return
-    } else {
+    if navigationController != nil  {
       pushOuter = request
-      return
+    } else if let parentScreen, detached, parentScreen.navigationController != nil || parentScreen.hasNavigationDestination {
+      pushOuter = request
+    } else if hasNavigationDestination {
+      pushNavigationDestination = request
+    } else {
+      Logger.screens.error("[\(self.logID)] can't push \(S.self), no navigation controller")
     }
   }
 

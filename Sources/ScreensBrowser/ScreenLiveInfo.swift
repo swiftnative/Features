@@ -15,7 +15,6 @@ public struct ScreenLiveInfo: Hashable, Codable {
   public let hasNavigationDestination: Bool
 
   public let size: ScreeSize
-  public let state: ViewState
   public let stack: NavigationStackInfo?
   public let appearance: ScreenAppearance
   public let info: String
@@ -31,7 +30,6 @@ public struct ScreenLiveInfo: Hashable, Codable {
               tag: String?,
               parentScreenID: ScreenID?,
               hasParentVC: Bool = true,
-              state: ViewState,
               hasNavigationDestination: Bool = false,
               size: ScreeSize,
               stack: NavigationStackInfo?,
@@ -44,7 +42,6 @@ public struct ScreenLiveInfo: Hashable, Codable {
     self.tag = tag
     self.hasNavigationDestination = hasNavigationDestination
     self.parentScreenID = parentScreenID
-    self.state = state
     self.size = size
     self.stack = stack
     self.info = info
