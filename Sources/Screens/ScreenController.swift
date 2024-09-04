@@ -73,15 +73,43 @@ public final class ScreenController: UIViewController, ObservableObject {
 
   /// ``CustomStringConvertable``
   public override var description: String { "\(logID)-\(self.vcID.pointer)" }
+  public override var debugDescription: String { "\(logID)-\(self.vcID.pointer)" }
 
   var logID: String { "\(staticID.type)[\(id)]" }
 
   var innerNC: UINavigationController? {
     parent?.children.first { $0 is UINavigationController } as? UINavigationController
   }
+  var outerNC: UINavigationController? {
+    navigationController
+  }
+  var rootNC: UINavigationController? {
+    navigationController?.navigationController
+  }
 
   var isTabBar: Bool {
     parent?.children.first { $0 is UITabBarController } != nil
+  }
+
+  /// ``ScreenProxy``
+  public var stack: StackProxy? {
+    if let rootNC, let outerIndex = outerNC?.index(of: self), outerIndex == 0 {
+      let index = rootNC.index(of: self) ?? -1
+      return  StackProxy(stackID: rootNC.vcID,
+                         index: index,
+                         kind: .root)
+    } else if let outerNC {
+      let index = outerNC.index(of: self) ?? -1
+      return  StackProxy(stackID: outerNC.vcID,
+                         index: index,
+                         kind: .outer)
+    } else if let innerNC {
+      return StackProxy(stackID: innerNC.vcID,
+                        index: 0,
+                        kind: .inner)
+    } else {
+      return nil
+    }
   }
 
   var parentScreen: ScreenController? {
@@ -92,6 +120,7 @@ public final class ScreenController: UIViewController, ObservableObject {
   private(set) var isAppearing: Bool = false
   private(set) var isDisappearing: Bool = false
   private var notifiedWillPoppedBack = false
+  private(set) var firstAppearanceStack: StackProxy?
 
   init(staticID: ScreenStaticID, alias: String?, parentScreenID: ScreenID? = nil, isPresented: Bool = false) {
     self.staticID = staticID
@@ -149,10 +178,10 @@ public final class ScreenController: UIViewController, ObservableObject {
     self.isPresented = newValue
   }
 
+  /// ``ScreenProxy``
   public func dismiss() {
     doDismiss.send()
   }
-
 
   //MARK: UIKit
 
@@ -174,7 +203,7 @@ public final class ScreenController: UIViewController, ObservableObject {
 
   public override func viewWillDisappear(_ animated: Bool) {
     isDisappearing = true
-    notifyIfPoped()
+    notifyPreviousScreensToBePoped()
     Logger.uikit.debug("\(self.logID) viewWillDisappear [p:\(self.isBeingPresented) d:\(self.isBeingDismissed) mtp:\(self.isMovingToParent) mfp:\(self.isMovingFromParent)]")
     super.viewWillDisappear(animated)
   }
@@ -225,24 +254,30 @@ public final class ScreenController: UIViewController, ObservableObject {
   private func screenDidAppear() {
 
     if appearance.isFirstAppearance {
-      if parentScreen?.parent == parent {
-        appearance.firstAppearance = .nested
-      } else if navigationController != nil {
+
+      if parentScreen?.parent == parent || !self.isPresented {
+        appearance.nested = true
+      }
+
+      if let stack, stack.index > 0 {
         appearance.firstAppearance = .pushed
+        self.firstAppearanceStack = stack
       } else if sheetPresentationController != nil, presentingViewController != nil {
         appearance.firstAppearance = .sheet
       } else if presentingViewController != nil {
         appearance.firstAppearance = .fullscreen
-      } else if !self.isPresented {
-        appearance.firstAppearance = .nested
       } else {
         appearance.firstAppearance = .other
       }
+
       appearance.appearance = appearance.firstAppearance
     } else {
       if self.notifiedWillPoppedBack {
         self.appearance.appearance = .poppedTo
-        self.notifiedWillPoppedBack = false
+      } else if self.appearance.nested,
+                let parentScreen,
+                parentScreen.notifiedWillPoppedBack {
+        self.appearance.appearance = .poppedTo
       } else {
         self.appearance.appearance = .other
       }
@@ -253,30 +288,41 @@ public final class ScreenController: UIViewController, ObservableObject {
     DispatchQueue.main.async {
       Logger.screens.debug("\(self.logID) appear via: \(self.appearance.description)")
       self.onScreenAppear.send(self.appearance)
+      self.notifiedWillPoppedBack = false
       Screens.shared.screen(kind: .didAppear(detached: self.detached, appearance: self.appearance), for: self)
       Screens.shared.screen(stateUpdated: self)
       self.screenshot()
     }
   }
 
-  private func notifyIfPoped() {
-    guard let navigationController,
-          let parent,
-          !navigationController.viewControllers.contains(parent) else { return }
+  private func notifyPreviousScreensToBePoped() {
+    guard let firstAppearanceStack, appearance.firstAppearance == .pushed else { return }
 
-    func notifyScreenController(vcs: [UIViewController]) {
+    func notify(_ vcs: [UIViewController]) {
       for vc in vcs {
-        if let screenVC = vc as? ScreenController {
+        if let screenVC = vc as? ScreenController, vc != self {
           screenVC.notifiedWillPoppedBack = true
+        } else if !vc.children.isEmpty {
+          notify(vc.children)
         }
       }
     }
 
-    notifyScreenController(vcs: navigationController.viewControllers.flatMap { $0.children })
-
-    guard let ncParent = navigationController.parent else { return }
-
-    notifyScreenController(vcs: ncParent.children)
+    switch firstAppearanceStack.kind {
+    case .inner:
+      Logger.screens.error("\(self.logID) can't be popped from inner stack")
+      break
+    case .outer:
+      guard let outerNC else { return }
+      notify(outerNC.viewControllers)
+      guard let ncParent = outerNC.parent else { return }
+      notify(ncParent.children)
+    case .root:
+      guard let rootNC else { return }
+      notify(rootNC.viewControllers)
+      guard let ncParent = rootNC.parent else { return }
+      notify(ncParent.children)
+    }
   }
 }
 
@@ -300,43 +346,10 @@ extension ScreenController {
                    hasParentVC: parent != nil,
                    hasNavigationDestination: hasNavigationDestination,
                    size: ScreeSize(size: parent?.view.frame.size ?? view.frame.size),
-                   stack: stackInfo,
+                   stack: stack,
                    appearance: appearance,
                    isPresented: isPresented,
-                   info: info)
-  }
-
-  var stackInfo: NavigationStackInfo? {
-
-    if let outerNC, let parent {
-      let index = outerNC.viewControllers.firstIndex(of: parent) ?? -1
-      return  NavigationStackInfo(stackID: outerNC.vcID,
-                                  index: index,
-                                  kind: .outer)
-    } else if let innerNC {
-      return NavigationStackInfo(stackID: innerNC.vcID,
-                                 index: 0,
-                                 kind: .inner)
-    } else {
-      return nil
-    }
-  }
-
-  private var info: String {
-
-    var info = ""
-
-    func addInfo(_ title: String, _ vc: UIViewController?) {
-      guard let vc else { return }
-      info += "**\(title)**\n\(vc.description)\n\n"
-    }
-
-    addInfo("Presenting", presentingViewController)
-    addInfo("Presented", presentedViewController)
-    addInfo("Parent", parent)
-    addInfo("Navigation Parent", navigationController?.parent)
-
-    return info
+                   info: "")
   }
 
   func screenshot() {

@@ -10,7 +10,6 @@ import ScreensUI
 struct SettingsView: View {
 
   var screenBody: some View {
-    NavigationStack {
       VStack {
         ConnectionView()
         List {
@@ -19,7 +18,6 @@ struct SettingsView: View {
           }
         }
       }
-    }
   }
 }
 

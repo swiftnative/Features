@@ -56,9 +56,6 @@ extension ScreenController: ScreenProxy {
     self.sheet = ScreenAppearRequest(screenStaticID: S.screenID, view: view)
   }
 
-  public var stack: StackProxy? {
-    stackInfo
-  }
 }
 
 public extension ViewModifier where Self == EmptyModifier {

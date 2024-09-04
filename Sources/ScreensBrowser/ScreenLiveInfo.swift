@@ -15,7 +15,7 @@ public struct ScreenLiveInfo: Hashable, Codable {
   public let hasNavigationDestination: Bool
 
   public let size: ScreeSize
-  public let stack: NavigationStackInfo?
+  public let stack: StackProxy?
   public let appearance: ScreenAppearance
   public let isPresented: Bool
   public let info: String
@@ -33,7 +33,7 @@ public struct ScreenLiveInfo: Hashable, Codable {
               hasParentVC: Bool = true,
               hasNavigationDestination: Bool = false,
               size: ScreeSize,
-              stack: NavigationStackInfo?,
+              stack: StackProxy?,
               appearance: ScreenAppearance,
               isPresented: Bool,
               info: String) {
@@ -69,21 +69,4 @@ public struct ScreeSize: Codable, Hashable, CustomStringConvertible {
   public var description: String {
     "\(Int(width))x\(Int(height))"
   }
-}
-
-public struct NavigationStackInfo: Codable, Hashable {
-  public let stackID: ViewController.ID
-  public let index: Int
-  public let kind: StackKind
-
-  public init(stackID: ViewController.ID, index: Int, kind: StackKind) {
-    self.stackID = stackID
-    self.index = index
-    self.kind = kind
-  }
-}
-
-public enum StackKind: String, Codable {
-  case inner
-  case outer
 }

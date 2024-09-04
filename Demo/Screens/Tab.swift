@@ -13,26 +13,31 @@ struct TabScreen {
   var screenBody: some View {
 
     TabView() {
-      LibraryView()
-        .tabItem {
-          Label("Library", systemImage: "books.vertical")
-        }
 
-        UseCasesScreen()
-      .tabItem {
-        Label("Use Cases", systemImage: "scribble.variable")
+      NavigationStack {
+        LibraryView()
       }
-      .accessibilityIdentifier("Use Cases")
+      .tabItem {
+        Label("Library", systemImage: "books.vertical")
+      }
+      
+      UseCasesScreen()
+        .tabItem {
+          Label("Use Cases", systemImage: "scribble.variable")
+        }
+        .accessibilityIdentifier("Use Cases")
 
       MyMusicView()
         .tabItem {
           Label("MyMusic", systemImage: "music.note")
         }
 
-      SettingsView()
-        .tabItem {
-          Label("Settings", systemImage: "gear")
-        }
+      NavigationView {
+        SettingsView()
+      }
+      .tabItem {
+        Label("Settings", systemImage: "gear")
+      }
     }
     .accessibilityIdentifier("Tab Bar")
   }

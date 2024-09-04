@@ -8,11 +8,19 @@
 import ScreensBrowser
 import SwiftUI
 
-extension UIViewController {
-
-  var outerNC: UINavigationController? {
-    navigationController
+extension UINavigationController {
+  func index(of vc: UIViewController) -> Int? {
+    if vc.parent == self {
+      return viewControllers.firstIndex(of: vc)
+    } else if let parent = vc.parent {
+      return index(of: parent)
+    } else {
+      return nil
+    }
   }
+}
+
+extension UIViewController {
 
   var rootParent: UIViewController? {
 
@@ -86,12 +94,14 @@ extension UIViewController {
   @MainActor
   var vc: ViewController {
     let scontroller = self as? ScreenController
+    
     var controllers: [ViewController.ID] = []
     if let nc = self as? UINavigationController {
       controllers = nc.viewControllers.map { $0.vcID }
     }
 
     var info: [String: String] = [:]
+
     info["isViewLoaded"] = isViewLoaded.description
     info["isModalInPresentation"] = isModalInPresentation.description
     info["isFirstResponder"] = isFirstResponder.description
@@ -99,13 +109,21 @@ extension UIViewController {
     info["isMovingFromParent"] = isMovingFromParent.description
     info["isBeingPresented"] = isBeingPresented.description
     if let tabBarController {
-      info["TabBarController"] = tabBarController.vcID.pointer
+      info["tabBarController"] = tabBarController.vcID.pointer
+    }
+    if let navigationController {
+      info["navigationController"] = navigationController.vcID.pointer
+      info["index"] = navigationController.index(of: self)?.description ?? ""
     }
 
-
-
-    if !children.isEmpty {
-      info["children"] = children.map{ $0.vcID.pointer }.joined(separator: ",")
+    if let vc = self as? UITabBarController {
+      info["TBC.selectedIndex"] = vc.selectedIndex.description
+      info["TBC.delegate"] = vc.delegate.debugDescription
+    } else if let vc = self as? UINavigationController {
+      info["NC.isNavigationBarHidden"] = vc.isNavigationBarHidden.description
+      info["NC.delegate"] = vc.delegate.debugDescription
+      info["NC.visibleViewController"] = vc.visibleViewController?.vcID.pointer
+      info["NC.topViewController"] = vc.topViewController?.vcID.pointer
     }
 
     return ViewController(id: vcID,
@@ -120,8 +138,7 @@ extension UIViewController {
                           info: info,
                           stackID: navigationController?.vcID,
                           presentingID: presentingViewController?.vcID,
-                          presentedID: presentedViewController?.vcID
-    )
+                          presentedID: presentedViewController?.vcID)
   }
 
   var kind: ViewController.Kind? {

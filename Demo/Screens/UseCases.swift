@@ -28,7 +28,6 @@ private struct UseCasesScreenBody: View {
   }
 
   var body: some View {
-
     ScreenStack {
       VStack {
         Picker("Tab", selection: $selectedPage) {

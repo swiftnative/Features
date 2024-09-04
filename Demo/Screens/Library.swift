@@ -16,7 +16,6 @@ struct LibraryView {
   @State var nativeSheet = false
 
   var screenBody: some View {
-    NavigationStack {
       Group {
         if searchText.isEmpty {
           List {
@@ -78,8 +77,6 @@ struct LibraryView {
       .onAppear {
         print("Library appear current: \(Screens.current)")
       }
-    }
-
   }
 }
 
