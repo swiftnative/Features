@@ -18,16 +18,12 @@ public struct ScreenModifier: ViewModifier {
 
   public func body(content: Content) -> some View {
     content
-      .onPreferenceChange(ScreenNavigationDestinationPreferenceKey.self, perform: { [weak controller] value in
-        controller?.hasNavigationDestination = value
-      })
       .fullScreenCover(item: $controller.fullcreen) { $0.view }
       .sheet(item: $controller.sheet) { $0.view }
       .push(item: $controller.pushOuter) { $0.view }
       .environmentObject(controller)
       .environment(\.screenID, controller.id)
       .environment(\.screen, controller.screenInfo)
-
       .onDisappear { [weak controller] in
         controller?.onDissappear()
       }
@@ -43,7 +39,7 @@ public struct ScreenModifier: ViewModifier {
         dismiss()
       })
       .onAppear { [weak controller] in
-        controller?.parentScreenID = parentScreenID == .zero ? nil : parentScreenID
+        controller?.set(parent: parentScreenID)
         controller?.isPresented = isPresented
         controller?.onAppear()
       }
@@ -63,10 +59,14 @@ private struct ViewControllerAccessor: UIViewControllerRepresentable {
   }
 
   func makeUIViewController(context: Context) -> ScreenController {
-    controller
+//    print("makeUIViewController \(controller.logID) \(context.environment.screenID)")
+    controller.set(parent: context.environment.screenID)
+    controller.isPresented = context.environment.isPresented
+    return controller
   }
 
   func updateUIViewController(_ uiViewController: ScreenController, context: Context) {
+//    print("updateUIViewController \(controller.logID) \(context.environment.screenID) \(context.environment.isPresented)")
   }
 
   func dismantleUIViewController(_ uiViewController: ScreenController) {

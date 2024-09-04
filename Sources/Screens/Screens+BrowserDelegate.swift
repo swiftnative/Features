@@ -113,6 +113,7 @@ private extension Screens {
         }
       }
 
+      controllers.compact()
       let uniqRootParanets = controllers.all().uniqRootParanets
       uniqRootParanets.forEach { scan(uiVC: $0, parent: nil) }
 

@@ -24,6 +24,10 @@ public struct ScreenStaticInfo: Hashable, Codable, Identifiable {
   public var urlDecodable: Bool {
     path != nil
   }
+
+  public func hash(into hasher: inout Hasher) {
+    hasher.combine(id)
+  }
 }
 
 public struct ScreenStaticID: Hashable, Codable, CustomStringConvertible {

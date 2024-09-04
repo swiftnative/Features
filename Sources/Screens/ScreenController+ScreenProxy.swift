@@ -12,11 +12,6 @@ import os
 
 extension ScreenController: ScreenProxy {
 
-  private func log(error message: String) {
-    Logger.screens.error("[\(self.logID)] \(message)")
-    Screens.shared.screen(error: "[\(self.logID)] \(message)")
-  }
-
   public func push<S, M>(_ screen: S, modifier: M) where S : Screen, M : ViewModifier {
     Logger.screens.debug("[\(self.logID)] will push \(S.self)")
     Screens.shared.screen(kind: .willPush(S.screenID), for: self)
@@ -56,6 +51,15 @@ extension ScreenController: ScreenProxy {
     self.sheet = ScreenAppearRequest(screenStaticID: S.screenID, view: view)
   }
 
+  public func popToRoot() {
+    if let rootNC {
+      rootNC.popToRootViewController(animated: true)
+    } else if let outerNC {
+      outerNC.popToRootViewController(animated: true)
+    } else if let innerNC {
+      innerNC.popToRootViewController(animated: true)
+    }
+  }
 }
 
 public extension ViewModifier where Self == EmptyModifier {

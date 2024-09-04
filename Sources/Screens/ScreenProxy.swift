@@ -25,6 +25,8 @@ public protocol ScreenProxy: CustomStringConvertible {
 
   var stack: StackProxy? { get }
 
+  func popToRoot()
+
   var id: ScreenID { get}
 }
 

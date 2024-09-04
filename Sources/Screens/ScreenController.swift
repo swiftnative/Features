@@ -23,11 +23,15 @@ public final class ScreenController: UIViewController, ObservableObject {
   public let screenInfo: ScreenInfo
 
   /// Dynamic Let
-  public var parentScreenID: ScreenID?
+  public private(set) var parentScreenID: ScreenID?
 
+  func set(parent: ScreenID) {
+    guard parent != .zero, parentScreenID == nil else { return }
+    self.parentScreenID = parent
+  }
   /// Var
   var tag: ScreenTag?
-  var hasNavigationDestination: Bool = false
+  @Published var hasNavigationDestination: Bool = false
   var isPresented: Bool
 
   /// View Communcation
@@ -103,7 +107,7 @@ public final class ScreenController: UIViewController, ObservableObject {
       return  StackProxy(stackID: outerNC.vcID,
                          index: index,
                          kind: .outer)
-    } else if let innerNC {
+    } else if let innerNC, hasNavigationDestination {
       return StackProxy(stackID: innerNC.vcID,
                         index: 0,
                         kind: .inner)
@@ -147,17 +151,24 @@ public final class ScreenController: UIViewController, ObservableObject {
 
   //MARK: SwiftUI
   func screenDestinationOnAppear() {
+    hasNavigationDestination = true
     guard !isAppearing, innerNC != nil else { return }
-    Logger.screens.debug("\(self.logID) screenDestinationOnAppear")
+    Logger.swiftui.debug("\(self.logID) screenDestinationOnAppear")
 
     if !appearance.isFirstAppearance {
       screenDidAppear()
     }
   }
 
+  func screenDestinationOnDissappear() {
+    guard innerNC != nil else { return }
+    Logger.swiftui.debug("\(self.logID) screenDestinationOnDisappear")
+    screenDidDisappear()
+  }
+
   func onAppear() {
     isAppearing = true
-    Logger.screens.debug("\(self.logID) onAppear \(self.detached ? "(detached)" : "") \(self.isPresented ? "(presented)" : "")")
+    Logger.swiftui.debug("\(self.logID) onAppear \(self.detached ? "(detached)" : "") \(self.isPresented ? "(presented)" : "")")
 
     if appearance.isFirstAppearance  {
       detectFirstAppearance()
@@ -168,9 +179,7 @@ public final class ScreenController: UIViewController, ObservableObject {
 
   func onDissappear() {
     Logger.swiftui.debug("\(self.logID) onDissappear")
-    self.appearance.appearance = .dissapeared
-    Screens.shared.screen(kind: .didDisappear, for: self)
-    Screens.shared.screen(stateUpdated: self)
+    screenDidDisappear()
   }
 
   func onIsPresentedChanged(_ newValue: Bool) {
@@ -251,6 +260,14 @@ public final class ScreenController: UIViewController, ObservableObject {
     screenDidAppear()
   }
 
+  private func screenDidDisappear() {
+    guard appearance.appearance != .dissapeared else { return }
+    Logger.screens.debug("\(self.logID) disappeared")
+    self.appearance.appearance = .dissapeared
+    Screens.shared.screen(kind: .didDisappear, for: self)
+    Screens.shared.screen(stateUpdated: self)
+  }
+
   private func screenDidAppear() {
 
     if appearance.isFirstAppearance {
@@ -270,6 +287,10 @@ public final class ScreenController: UIViewController, ObservableObject {
         appearance.firstAppearance = .other
       }
 
+      if let innerNC, !hasNavigationDestination {
+        log(error: "has inner navigation controller but not a scree navigation destination")
+      }
+
       appearance.appearance = appearance.firstAppearance
     } else {
       if self.notifiedWillPoppedBack {
@@ -285,6 +306,8 @@ public final class ScreenController: UIViewController, ObservableObject {
 
     appearance.count += 1
     isAppearing = false
+    isDisappearing = false
+
     DispatchQueue.main.async {
       Logger.screens.debug("\(self.logID) appear via: \(self.appearance.description)")
       self.onScreenAppear.send(self.appearance)
@@ -328,6 +351,11 @@ public final class ScreenController: UIViewController, ObservableObject {
 
 //MARK: ScreenBrowser+
 extension ScreenController {
+
+  func log(error message: String) {
+    Logger.screens.error("[\(self.logID)] \(message)")
+    Screens.shared.screen(error: "[\(self.logID)] \(message)")
+  }
 
   var nodeDebugName: String {
     "[\(id)]"
