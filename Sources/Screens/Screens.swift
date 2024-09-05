@@ -66,6 +66,7 @@ public final class Screens: NSObject, ObservableObject {
   }
 
   func screen(created controller: ScreenController) {
+
     controllers.add(controller)
     browser?.synchronize()
   }
@@ -112,8 +113,8 @@ extension NSPointerArray {
     (0..<count).compactMap { node(at: $0) }
   }
 
-  func dto() -> [ScreenLiveInfo] {
-    (0..<count).compactMap { node(at: $0)?.dto }
+  func info() -> [ScreenControllerInfo] {
+    (0..<count).compactMap { node(at: $0)?.info }
   }
 
   func first(where predicate: (ScreenController) -> Bool) -> ScreenController? {

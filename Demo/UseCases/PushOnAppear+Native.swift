@@ -8,6 +8,7 @@
 import SwiftUI
 import ScreensUI
 
+@available(iOS 17.0, *)
 @Screen
 struct PushOnAppearNative {
   @State var presented: ScreenAppearRequest?
@@ -28,5 +29,9 @@ struct PushOnAppearNative {
 
 
 #Preview {
-  PushOnAppearNative()
+  if #available(iOS 17.0, *) {
+    PushOnAppearNative()
+  } else {
+    // Fallback on earlier versions
+  }
 }

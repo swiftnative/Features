@@ -18,9 +18,11 @@ struct InfoScreen: View {
         Button("dismiss") {
           dismiss()
         }
-        LabeledContent("All", value: app.all.count, format: .number)
-        LabeledContent("Favorites", value: app.favorite.count, format: .number)
-        LabeledContent("Playlists", value: app.playlists.count, format: .number)
+        if #available(iOS 16.0, *) {
+          LabeledContent("All", value: app.all.count, format: .number)
+          LabeledContent("Favorites", value: app.favorite.count, format: .number)
+          LabeledContent("Playlists", value: app.playlists.count, format: .number)
+        }
       }
       .padding()
     }

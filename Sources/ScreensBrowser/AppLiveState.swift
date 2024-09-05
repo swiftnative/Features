@@ -7,22 +7,15 @@ import Foundation
 import SwiftUI
 
 public struct AppLiveState: Codable {
-  public var screens: [ScreenLiveInfo]
-  public let currentFeatureNodeID: ViewController.ID?
-  public let currentStackID: ViewController.ID?
-  public let tree: [Tree<ViewController>]
+  public var screens: [ScreenControllerInfo]
+  public let viewControllers: [Tree<ViewController>]
   public var current: ScreenID?
 
-  public init(screens: [ScreenLiveInfo],
-              current: ScreenID?,
-              currentFeatureNodeID: ViewController.ID? = nil,
-              currentStackID: ViewController.ID? = nil,
-              tree: [Tree<ViewController>] = []
-  ) {
+  public init(screens: [ScreenControllerInfo],
+              viewControllers: [Tree<ViewController>],
+              current: ScreenID?) {
     self.screens = screens
-    self.currentFeatureNodeID = currentFeatureNodeID
-    self.currentStackID = currentStackID
-    self.tree = tree
+    self.viewControllers = viewControllers
     self.current = current
   }
 }

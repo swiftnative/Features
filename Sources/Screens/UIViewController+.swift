@@ -69,16 +69,6 @@ extension UIViewController {
     return scan(uiVC: self)
   }
 
-  var nodeDescription: String {
-    var info: String = "**\(address)**\n"
-    if let current = self as? ScreenController {
-      info += current.nodeDebugName
-    } else {
-      info += vcType
-    }
-    return info
-  }
-
   var address: Int {
     Int(bitPattern: Unmanaged.passUnretained(self).toOpaque())
   }
@@ -91,15 +81,23 @@ extension UIViewController {
     address
   }
 
-  @MainActor
-  var vc: ViewController {
-    let scontroller = self as? ScreenController
-    
-    var controllers: [ViewController.ID] = []
-    if let nc = self as? UINavigationController {
-      controllers = nc.viewControllers.map { $0.vcID }
+  var screen: ViewController.Screen? {
+    guard let svc = self as? ScreenViewController else { return nil }
+    var screen = ViewController.Screen(id: svc.screenID, staticID: svc.staticID)
+    if let delegate = svc.delegate as? ScreenController {
+      screen.address = delegate.address
+      screen.outerNC = svc.outerNC?.address
+      screen.innerNC = svc.innerNC?.address
+      screen.rootNC = svc.rootNC?.address
+      screen.indexInRootNC = svc.indexInRootNC
+      screen.indexInInnerNC = svc.indexInInnerNC
+      screen.indexInOuterNC = svc.indexInOuterNC
     }
+    return screen
+  }
 
+  @MainActor
+  var info: ViewController {
     var info: [String: String] = [:]
 
     info["isViewLoaded"] = isViewLoaded.description
@@ -108,13 +106,6 @@ extension UIViewController {
     info["isMovingToParent"] = isMovingToParent.description
     info["isMovingFromParent"] = isMovingFromParent.description
     info["isBeingPresented"] = isBeingPresented.description
-    if let tabBarController {
-      info["tabBarController"] = tabBarController.vcID.pointer
-    }
-    if let navigationController {
-      info["navigationController"] = navigationController.vcID.pointer
-      info["index"] = navigationController.index(of: self)?.description ?? ""
-    }
 
     if let vc = self as? UITabBarController {
       info["TBC.selectedIndex"] = vc.selectedIndex.description
@@ -128,17 +119,16 @@ extension UIViewController {
 
     return ViewController(id: vcID,
                           type: vcType,
-                          screenID: scontroller?.id,
-                          screenType: scontroller?.staticID.type,
+                          screen: screen,
                           address: address,
                           parentID: parent?.vcID,
                           childs: children.map { $0.vcID },
-                          controllers: controllers,
                           kind: kind,
                           info: info,
                           stackID: navigationController?.vcID,
                           presentingID: presentingViewController?.vcID,
-                          presentedID: presentedViewController?.vcID)
+                          presentedID: presentedViewController?.vcID,
+                          tabBarID: tabBarController?.vcID)
   }
 
   var kind: ViewController.Kind? {

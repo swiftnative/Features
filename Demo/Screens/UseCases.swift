@@ -72,7 +72,11 @@ private struct NavigationPage {
       }
 
       Button("Sheet (Only medium)") {
-        Screens.current.sheet(TestScreenWithStack(), modifier: .detents(.medium), .closeButton)
+        if #available(iOS 16.0, *) {
+          Screens.current.sheet(TestScreenWithStack(), modifier: .detents(.medium), .closeButton)
+        } else {
+          Screens.current.sheet(TestScreenWithStack(), modifier: .closeButton)
+        }
       }
 
       Button("Push") {

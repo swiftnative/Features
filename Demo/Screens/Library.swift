@@ -73,7 +73,6 @@ struct LibraryView {
           SearchScreen(searchText: $searchText)
         }
       }
-      .screenNavigationDestination
       .onAppear {
         print("Library appear current: \(Screens.current)")
       }

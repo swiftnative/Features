@@ -79,7 +79,6 @@ struct SongView {
   }
     .sheet(isPresented: .constant(true)) {
       SongView(song: .duHast)
-        .presentationDetents([.medium])
     }
 
 }
@@ -88,7 +87,6 @@ struct SongView {
   Text("A")
     .sheet(isPresented: .constant(true)) {
       SongView(id: 123232)
-        .presentationDetents([.medium])
     }
 }
 

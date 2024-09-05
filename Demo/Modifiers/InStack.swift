@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@available(iOS 16.0, *)
 struct InStack: ViewModifier {
 
   @State var path = NavigationPath()
@@ -18,6 +19,7 @@ struct InStack: ViewModifier {
   }
 }
 
+@available(iOS 16.0, *)
 extension ViewModifier where Self == InStack {
   static var inStack: Self { InStack() }
 }

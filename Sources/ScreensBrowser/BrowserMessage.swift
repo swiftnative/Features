@@ -12,7 +12,7 @@ public enum BrowserMessage {
   public enum To: Codable, CustomDebugStringConvertible {
     case application(AppInfo)
     case screenShoot(ScreenShoot)
-    case screen(ScreenLiveInfo)
+    case screen(ScreenControllerInfo)
     case appLiveState(AppLiveState)
     case screensStaticInfo([ScreenStaticInfo])
     case screenURLError(ScreenURL, String)

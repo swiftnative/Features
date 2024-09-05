@@ -14,7 +14,7 @@ struct TabScreen {
 
     TabView() {
 
-      NavigationStack {
+      ScreenStack {
         LibraryView()
       }
       .tabItem {

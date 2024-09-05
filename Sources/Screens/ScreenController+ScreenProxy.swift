@@ -13,15 +13,17 @@ import os
 extension ScreenController: ScreenProxy {
 
   public func push<S, M>(_ screen: S, modifier: M) where S : Screen, M : ViewModifier {
+    guard let viewController else { return }
+
     Logger.screens.debug("[\(self.logID)] will push \(S.self)")
     Screens.shared.screen(kind: .willPush(S.screenID), for: self)
 
     let view = AnyView(screen.modifier(modifier))
     let request = ScreenAppearRequest(screenStaticID: S.screenID, view: view)
 
-    if navigationController != nil  {
+    if viewController.navigationController != nil  {
       pushOuter = request
-    } else if let parentScreen, detached, parentScreen.navigationController != nil || parentScreen.hasNavigationDestination {
+    } else if let parentScreen, detached, parentScreen.viewController?.navigationController != nil || parentScreen.hasNavigationDestination {
       pushOuter = request
     } else if hasNavigationDestination {
       pushNavigationDestination = request

@@ -27,7 +27,11 @@ extension MusicApp: ScreensDelegate {
     case .fullscreen:
       Screens.current.fullscreen(screen, modifier: .closeButton)
     case .sheet:
-      Screens.current.sheet(screen, modifier: .detents(.medium, .large), .closeButton)
+      if #available(iOS 16.0, *) {
+        Screens.current.sheet(screen, modifier: .detents(.medium, .large), .closeButton)
+      } else {
+        Screens.current.sheet(screen, modifier: .closeButton)
+      }
     default:
       self.default.action(action, screen: screen, params: params)
     }

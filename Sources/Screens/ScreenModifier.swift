@@ -4,6 +4,8 @@
 import SwiftUI
 import ScreensBrowser
 import Combine
+import os
+
 /// Modifier to configure global features behavior
 public struct ScreenModifier: ViewModifier {
 
@@ -11,6 +13,7 @@ public struct ScreenModifier: ViewModifier {
   @Environment(\.isPresented) var isPresented
   @Environment(\.dismiss) var dismiss
   @Environment(\.screenID) var parentScreenID
+  @Environment(\.screenAddress) var parentScreenAddress
 
   public init<S: Screen>(_ screen: S.Type, alias: String?) {
     _controller = StateObject(wrappedValue: ScreenController(staticID: screen.screenID, alias: alias))
@@ -23,6 +26,7 @@ public struct ScreenModifier: ViewModifier {
       .push(item: $controller.pushOuter) { $0.view }
       .environmentObject(controller)
       .environment(\.screenID, controller.id)
+      .environment(\.screenAddress, controller.address)
       .environment(\.screen, controller.screenInfo)
       .onDisappear { [weak controller] in
         controller?.onDissappear()
@@ -39,7 +43,7 @@ public struct ScreenModifier: ViewModifier {
         dismiss()
       })
       .onAppear { [weak controller] in
-        controller?.set(parent: parentScreenID)
+        controller?.set(parent: parentScreenID, address: parentScreenAddress)
         controller?.isPresented = isPresented
         controller?.onAppear()
       }
@@ -49,63 +53,21 @@ public struct ScreenModifier: ViewModifier {
 
 private struct ViewControllerAccessor: UIViewControllerRepresentable {
 
-  @Binding private var observed: Void // workaround for state changes not triggering view updates
+  let controller: ScreenController
 
-  @ObservedObject var controller: ScreenController
-
-  init(controller: ScreenController) {
-    self._observed = .constant(())
-    self.controller = controller
+  func makeUIViewController(context: Context) -> ScreenViewController {
+    let vc = ScreenViewController(id: controller.id, staticID: controller.staticID)
+    vc.delegate = controller
+    controller.viewController = vc
+    Logger.swiftui.log("\(controller.logID) makeUIViewController \(vc.vcID.pointer)")
+    return vc
   }
 
-  func makeUIViewController(context: Context) -> ScreenController {
-//    print("makeUIViewController \(controller.logID) \(context.environment.screenID)")
-    controller.set(parent: context.environment.screenID)
-    controller.isPresented = context.environment.isPresented
-    return controller
-  }
-
-  func updateUIViewController(_ uiViewController: ScreenController, context: Context) {
+  func updateUIViewController(_ uiViewController: ScreenViewController, context: Context) {
 //    print("updateUIViewController \(controller.logID) \(context.environment.screenID) \(context.environment.isPresented)")
   }
 
-  func dismantleUIViewController(_ uiViewController: ScreenController) {
-    controller.fullcreen = nil
-    controller.sheet = nil
-    controller.pushOuter = nil
-    controller.pushNavigationDestination = nil
-  }
-}
-
-struct ScreenIDKey : EnvironmentKey {
-  static var defaultValue: ScreenID = .zero
-}
-
-public extension EnvironmentValues {
-  var screenID: ScreenID {
-    get { self[ScreenIDKey.self] }
-    set { self[ScreenIDKey.self] = newValue }
-  }
-}
-
-struct ScreenKey : EnvironmentKey {
-  static var defaultValue: ScreenInfo = .empty
-}
-
-public struct ScreenInfo: CustomStringConvertible {
-  public let id: ScreenID
-  public let type: String
-
-  public var description: String {
-    "\(type)[\(id)]"
-  }
-
-  public static var empty = ScreenInfo(id: 0, type: "")
-}
-
-public extension EnvironmentValues {
-  var screen: ScreenInfo {
-    get { self[ScreenKey.self] }
-    set { self[ScreenKey.self] = newValue }
+  func dismantleUIViewController(_ uiViewController: ScreenViewController) {
+    Logger.swiftui.log("\(controller.logID) dismantleUIViewController \(uiViewController.vcID.pointer)")
   }
 }

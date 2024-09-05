@@ -22,7 +22,7 @@ extension Screens: BrowserDelegate {
         browser?.send(message: .appLiveState(getAppLiveState()))
       case .sendScreenInfo(let id):
         guard let screen = screen(by: id) else { return }
-        browser?.send(message: .screen(screen.dto))
+        browser?.send(message: .screen(screen.info))
       case .dismiss(let id):
         guard let screen = screen(by: id) else { return }
         screen.dismiss()
@@ -89,47 +89,40 @@ private extension Screens {
   @MainActor
   func getAppLiveState() -> AppLiveState {
 
-    @MainActor
-    func viewControllers() -> [Tree<ViewController>] {
+    var viewContollers: [Tree<ViewController>] = []
 
-      var result: [Tree<ViewController>] = []
+    func collectViewControllers(uiVC: UIViewController, parent: Tree<ViewController>? = nil) {
+      let tree = Tree(value: uiVC.info)
 
-      func scan(uiVC: UIViewController, parent: Tree<ViewController>? = nil) {
-        let tree = Tree(value: uiVC.vc)
-
-        if let parent {
-          if parent.children == nil {
-            parent.children = [tree]
-          } else {
-            parent.children?.append(tree)
-          }
-
+      if let parent {
+        if parent.children == nil {
+          parent.children = [tree]
         } else {
-          result.append(tree)
+          parent.children?.append(tree)
         }
 
-        for child in uiVC.children {
-          scan(uiVC: child, parent: tree)
-        }
+      } else {
+        viewContollers.append(tree)
       }
 
-      controllers.compact()
-      let uniqRootParanets = controllers.all().uniqRootParanets
-      uniqRootParanets.forEach { scan(uiVC: $0, parent: nil) }
-
-      return result
+      for child in uiVC.children {
+        collectViewControllers(uiVC: child, parent: tree)
+      }
     }
 
-    let tree = viewControllers()
-    let nc = current?.innerNC ?? current?.outerNC
-    let screens = controllers.dto()
-    let currentScreen = current?.id
+    controllers.compact()
+
+    controllers
+      .all()
+      .compactMap { $0.viewController }
+      .uniqRootParanets
+      .forEach { collectViewControllers(uiVC: $0, parent: nil) }
+
+    let screens = controllers.info()
+    let current = current?.id
     let info = AppLiveState(screens: screens,
-                            current: currentScreen,
-                            currentFeatureNodeID: current?.vcID,
-                            currentStackID: nc?.vcID,
-                            tree: tree
-    )
+                            viewControllers: viewContollers,
+                            current: current)
     return info
   }
 }

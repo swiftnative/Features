@@ -11,8 +11,14 @@ import ScreensUI
 @Screen
 struct TestScreen {
   var screenBody: some View {
-    TestView()
-      .presentationDetents([.medium, .large])
+    Group {
+      if #available(iOS 16.0, *) {
+        TestView()
+          .presentationDetents([.medium, .large])
+      } else {
+        TestView()
+      }
+    }
   }
 }
 
@@ -28,9 +34,13 @@ struct TestScreenWithStack {
 
   var screenBody: some View {
     ScreenStack {
-      TestView()
+      if #available(iOS 16.0, *) {
+        TestView()
+          .presentationDetents([.medium, .large])
+      } else {
+        TestView()
+      }
     }
-    .presentationDetents([.medium, .large])
   }
 }
 
@@ -94,7 +104,7 @@ fileprivate struct TestView:  View {
         Text("TestWrapper")
           .tag(ScreensToOpen.testWrapper)
       }
-      .pickerStyle(.navigationLink)
+      .pickerStyle(.menu)
       HStack {
         VStack {
           Text("Screens")

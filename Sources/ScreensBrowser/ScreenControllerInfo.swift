@@ -5,20 +5,20 @@
 
 import Foundation
 
-public struct ScreenLiveInfo: Hashable, Codable {
+public struct ScreenControllerInfo: Hashable, Codable {
   public let staticID: ScreenStaticID
   public let screenID: ScreenID
   public let alias: String?
   public let parentScreenID: ScreenID?
   public let tag: String?
-  public let hasParentVC: Bool
   public let hasNavigationDestination: Bool
-
   public let size: ScreeSize
   public let stack: StackProxy?
   public let appearance: ScreenAppearance
   public let isPresented: Bool
-  public let info: String
+  public let vcID: ViewController.ID?
+  public let address: Int
+  public let parentAddress: Int?
 
 
   public var type: String { staticID.type }
@@ -36,19 +36,22 @@ public struct ScreenLiveInfo: Hashable, Codable {
               stack: StackProxy?,
               appearance: ScreenAppearance,
               isPresented: Bool,
-              info: String) {
+              vcID: ViewController.ID?,
+              address: Int,
+              parentAddress: Int?) {
     self.screenID = screenID
     self.staticID = staticID
-    self.hasParentVC = hasParentVC
     self.alias = alias
     self.tag = tag
     self.hasNavigationDestination = hasNavigationDestination
     self.parentScreenID = parentScreenID
     self.size = size
     self.stack = stack
-    self.info = info
     self.appearance = appearance
     self.isPresented = isPresented
+    self.vcID = vcID
+    self.address = address
+    self.parentAddress = parentAddress
   }
 }
 

@@ -42,8 +42,12 @@ struct MyMusicView {
         }
       }
       .sheet(isPresented: $loginPresented) {
-        LoginForm()
-          .presentationDetents([.medium])
+        if #available(iOS 16.0, *) {
+          LoginForm()
+            .presentationDetents([.medium])
+        } else {
+          LoginForm()
+        }
       }
     }
   }

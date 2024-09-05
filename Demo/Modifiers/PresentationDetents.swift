@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@available(iOS 16.0, *)
 struct PresentationDetentsModifier: ViewModifier {
   let detents: Set<PresentationDetent>
 
@@ -16,6 +17,7 @@ struct PresentationDetentsModifier: ViewModifier {
   }
 }
 
+@available(iOS 16.0, *)
 extension ViewModifier where Self == PresentationDetentsModifier {
   static func detents(_ detents: PresentationDetent...) -> Self {
     PresentationDetentsModifier(detents: Set(detents))
