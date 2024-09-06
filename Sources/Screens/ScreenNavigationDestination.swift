@@ -7,6 +7,7 @@ import Foundation
 import Notifications
 import SwiftUI
 import ScreensBrowser
+import os
 
 struct ScreenNavigationDestinationModifier: ViewModifier {
   @EnvironmentObject var controller: ScreenController
@@ -30,15 +31,17 @@ struct ScreenNavigationDestinationModifier: ViewModifier {
         appeared = true
       }
       if !skip {
-        controller.screenDestinationOnAppear()
+        controller.onNavigationDestinationAppear()
       }
     }
-    .onDisappear { [weak controller] in
-      guard let controller else { return }
-      if !skip {
-        controller.screenDestinationOnDissappear()
-      }
-    }
+//    .onDisappear { [weak controller] in
+//      guard let controller else { return }
+//      if !skip {
+//        guard controller.innerNC != nil else { return }
+//        Logger.swiftui.log("\(controller.logID) screenDestinationOnDisappear")
+//        controller.onDissappear()
+//      }
+//    }
   }
 }
 

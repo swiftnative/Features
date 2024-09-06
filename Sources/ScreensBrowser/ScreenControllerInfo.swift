@@ -13,13 +13,17 @@ public struct ScreenControllerInfo: Hashable, Codable {
   public let tag: String?
   public let hasNavigationDestination: Bool
   public let size: ScreeSize
-  public let stack: StackProxy?
-  public let appearance: ScreenAppearance
+  public let stack: StackProxyInfo?
+  public let appearance: ScreenAppearance?
   public let isPresented: Bool
   public let vcID: ViewController.ID?
   public let address: Int
   public let parentAddress: Int?
 
+  public var isAppeared: Bool {
+    guard let appearance else { return false }
+    return appearance.appearance != .dissapeared
+  }
 
   public var type: String { staticID.type }
   public var file: String { staticID.file }
@@ -33,8 +37,8 @@ public struct ScreenControllerInfo: Hashable, Codable {
               hasParentVC: Bool = true,
               hasNavigationDestination: Bool = false,
               size: ScreeSize,
-              stack: StackProxy?,
-              appearance: ScreenAppearance,
+              stack: StackProxyInfo?,
+              appearance: ScreenAppearance?,
               isPresented: Bool,
               vcID: ViewController.ID?,
               address: Int,

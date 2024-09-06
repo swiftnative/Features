@@ -16,20 +16,23 @@ extension ScreenController: ScreenViewControllerDelegate {
 
   func viewWillAppear(_ animated: Bool) {
     isAppearing = true
-    /// isDisappearing  - its case when cancel swipe gesture for poping back in stack
-    if appearance.isFirstAppearance || isDisappearing  {
-      screenDidAppear()
-    }
+    screenWillAppear()
   }
 
   func viewWillDisappear(_ animated: Bool) {
+    guard !isDisappearing else { return }
     isDisappearing = true
-    notifyPreviousScreensToBePoped()
+    isAppearing = false
+    screenWillDisappear()
   }
 
   func viewDidAppear(_ animated: Bool) {
     isAppearing = false
     isDisappearing = false
+    if firstAppearanceStack == nil {
+      self.firstAppearanceStack = stack
+    }
+    Screens.shared.screen(stateUpdated: self)
   }
 
   func viewDidDisappear(_ animated: Bool) {

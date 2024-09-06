@@ -28,9 +28,6 @@ public struct ScreenModifier: ViewModifier {
       .environment(\.screenID, controller.id)
       .environment(\.screenAddress, controller.address)
       .environment(\.screen, controller.screenInfo)
-      .onDisappear { [weak controller] in
-        controller?.onDissappear()
-      }
       .onChange(of: isPresented, perform: { [weak controller] newValue in
         controller?.onIsPresentedChanged(newValue)
       })
@@ -42,6 +39,9 @@ public struct ScreenModifier: ViewModifier {
       .onReceive(controller.doDismiss, perform: { _ in
         dismiss()
       })
+      .onDisappear { [weak controller] in
+        controller?.onDissappear()
+      }
       .onAppear { [weak controller] in
         controller?.set(parent: parentScreenID, address: parentScreenAddress)
         controller?.isPresented = isPresented
@@ -59,7 +59,7 @@ private struct ViewControllerAccessor: UIViewControllerRepresentable {
     let vc = ScreenViewController(id: controller.id, staticID: controller.staticID)
     vc.delegate = controller
     controller.viewController = vc
-    Logger.swiftui.log("\(controller.logID) makeUIViewController \(vc.vcID.pointer)")
+//    Logger.swiftui.log("\(controller.logID) makeUIViewController \(vc.vcID.pointer)")
     return vc
   }
 

@@ -65,17 +65,17 @@ private struct NavigationPage {
       Text("Used current ScreenProxy to make navigation commands")
 
       Button("Fullscreen") {
-        Screens.current.fullscreen(TestScreenWithStack(), modifier: .closeButton)
+        Screens.current.fullscreen(TestScreenStackWrapped(), modifier: .closeButton)
       }
       Button("Sheet (Default detens)") {
-        Screens.current.sheet(TestScreenWithStack(), modifier: .closeButton)
+        Screens.current.sheet(TestScreenStackWrapped(), modifier: .closeButton)
       }
 
       Button("Sheet (Only medium)") {
         if #available(iOS 16.0, *) {
-          Screens.current.sheet(TestScreenWithStack(), modifier: .detents(.medium), .closeButton)
+          Screens.current.sheet(TestScreenStackWrapped(), modifier: .detents(.medium), .closeButton)
         } else {
-          Screens.current.sheet(TestScreenWithStack(), modifier: .closeButton)
+          Screens.current.sheet(TestScreenStackWrapped(), modifier: .closeButton)
         }
       }
 

@@ -14,29 +14,28 @@ struct TabScreen {
 
     TabView() {
 
-      ScreenStack {
-        LibraryView()
-      }
+      TestScreenStackWrapped()
       .tabItem {
-        Label("Library", systemImage: "books.vertical")
+        Label("Inner Stack", systemImage: "books.vertical")
       }
-      
-      UseCasesScreen()
+
+      TestNestedScreenStackWrapped()
         .tabItem {
-          Label("Use Cases", systemImage: "scribble.variable")
+          Label("Nested Screen", systemImage: "pip")
         }
         .accessibilityIdentifier("Use Cases")
 
-      MyMusicView()
+      UseCasesScreen()
         .tabItem {
-          Label("MyMusic", systemImage: "music.note")
+          Label("Inner Tabs", systemImage: "book.pages")
         }
+        .accessibilityIdentifier("Inner Tabs")
 
       NavigationView {
         SettingsView()
       }
       .tabItem {
-        Label("Settings", systemImage: "gear")
+        Label("Wrapped Navigation", systemImage: "gear")
       }
     }
     .accessibilityIdentifier("Tab Bar")

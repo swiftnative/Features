@@ -8,7 +8,7 @@
 import SwiftUI
 import ScreensUI
 
-@Screen
+@Screen(alias: "Simple")
 struct TestScreen {
   var screenBody: some View {
     Group {
@@ -22,15 +22,8 @@ struct TestScreen {
   }
 }
 
-@Screen
-struct TestScreenWrapper {
-  var screenBody: some View {
-    TestScreen()
-  }
-}
-
-@Screen
-struct TestScreenWithStack {
+@Screen(alias: "InnerStack")
+struct TestScreenStackWrapped {
 
   var screenBody: some View {
     ScreenStack {
@@ -43,6 +36,14 @@ struct TestScreenWithStack {
     }
   }
 }
+
+@Screen(alias: "Nested")
+struct TestNestedScreenStackWrapped {
+  var screenBody: some View {
+    TestScreenStackWrapped()
+  }
+}
+
 
 fileprivate struct TestView:  View {
   @State var current: String = Screens.current.description
@@ -64,8 +65,8 @@ fileprivate struct TestView:  View {
     var screen: any Screen {
       switch self {
       case .test: TestScreen()
-      case .testWithStack: TestScreenWithStack()
-      case .testWrapper: TestScreenWrapper()
+      case .testWithStack: TestScreenStackWrapped()
+      case .testWrapper: TestNestedScreenStackWrapped()
       }
     }
 
@@ -73,8 +74,8 @@ fileprivate struct TestView:  View {
       Group {
         switch self {
         case .test: TestScreen()
-        case .testWithStack: TestScreenWithStack()
-        case .testWrapper: TestScreenWrapper()
+        case .testWithStack: TestScreenStackWrapped()
+        case .testWrapper: TestNestedScreenStackWrapped()
         }
       }
     }
@@ -97,11 +98,11 @@ fileprivate struct TestView:  View {
       Divider()
 
       Picker("Screent to open", selection: $screenToOpen) {
-        Text("Test")
+        Text("Simple")
           .tag(ScreensToOpen.test)
-        Text("Test-with-Stack")
+        Text("InnerStack")
           .tag(ScreensToOpen.testWithStack)
-        Text("TestWrapper")
+        Text("Nested")
           .tag(ScreensToOpen.testWrapper)
       }
       .pickerStyle(.menu)

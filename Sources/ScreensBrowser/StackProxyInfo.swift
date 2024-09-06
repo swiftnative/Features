@@ -7,7 +7,8 @@
 
 import Foundation
 
-public struct StackProxy: Codable, Hashable {
+
+public struct StackProxyInfo: Codable, Hashable {
   public let stackID: ViewController.ID
   public let index: Int
   public let kind: Kind
@@ -18,7 +19,7 @@ public struct StackProxy: Codable, Hashable {
     case outer
   }
   
-  public init(stackID: ViewController.ID, index: Int, kind: StackProxy.Kind) {
+  public init(stackID: ViewController.ID, index: Int, kind: StackProxyInfo.Kind) {
     self.stackID = stackID
     self.index = index
     self.kind = kind

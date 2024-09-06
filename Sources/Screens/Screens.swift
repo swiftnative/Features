@@ -43,12 +43,10 @@ public final class Screens: NSObject, ObservableObject {
   var current: ScreenController? {
 
     let appeared = controllers.all()
-      .filter { $0.appearance.appearance != .dissapeared && !$0.isDisappearing }
-
+      .filter { $0.isAppeared && !$0.isDisappearing && $0.childs.isEmpty }
     
     let node = appeared
-      .filter { screen in !appeared.contains(where: {$0.parentScreenID == screen.id}) }
-      .sorted(by: { $0.appearance.lastAppearAt > $1.appearance.lastAppearAt }).first
+      .sorted(by: { $0.appearance!.lastAppearAt > $1.appearance!.lastAppearAt }).first
 
     return node
   }

@@ -15,7 +15,7 @@ extension ScreenController: ScreenProxy {
   public func push<S, M>(_ screen: S, modifier: M) where S : Screen, M : ViewModifier {
     guard let viewController else { return }
 
-    Logger.screens.debug("[\(self.logID)] will push \(S.self)")
+    Logger.screens.debug("\(self.logID) will push \(S.self)")
     Screens.shared.screen(kind: .willPush(S.screenID), for: self)
 
     let view = AnyView(screen.modifier(modifier))
@@ -28,7 +28,7 @@ extension ScreenController: ScreenProxy {
     } else if hasNavigationDestination {
       pushNavigationDestination = request
     } else {
-      Logger.screens.error("[\(self.logID)] can't push \(S.self), no navigation controller")
+      Logger.screens.error("\(self.logID) can't push \(S.self), no navigation controller")
     }
   }
 

@@ -16,6 +16,13 @@ struct SettingsView: View {
           Button("Theme") {
             Screens.current.push(ChoseThemeScreen())
           }
+
+          NavigationLink {
+            ChoseThemeScreen()
+          } label: {
+            Text("Theme")
+          }
+
         }
       }
   }

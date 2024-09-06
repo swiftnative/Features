@@ -16,50 +16,51 @@ struct LibraryView {
   @State var nativeSheet = false
 
   var screenBody: some View {
+    ScreenStack {
       Group {
         if searchText.isEmpty {
           List {
             NavigationLink("Info") {
               InfoScreen()
             }
-
+            
             Button("fullscreen") {
               Screens.current.fullscreen(InfoScreen(), modifier: .closeButton)
             }
-
+            
             Button("fullscreen-action") {
               Screens.action(.fullscreen, screen: InfoScreen())
             }
-
+            
             Button("Sheet-Info") {
               Screens.current.sheet(InfoScreen(), modifier: .closeButton)
             }
-
+            
             NavigationLink("Song") {
               SongView(song: .duHast)
             }
-
+            
             Button("Push-Song") {
               Screens.current.push(SongView(song: .duHast))
             }
-
+            
             Button("Sheet-Song") {
               Screens.current.sheet(SongView(song: .duHast), modifier: .closeButton)
             }
             Button("Native Sheet") {
               nativeSheet.toggle()
             }
-
+            
             Section("Green") {
               SongListView(songs: [.duHast, .someSong])
             }
             .environment(\.color, .green)
-
+            
             Section("Red") {
               SongListView(songs: [.elPoblema])
             }
             .environment(\.color, .red)
-
+            
             Section("Blue") {
               SongListView(songs: app.all.filter { $0.author == .morgenstern })
             }
@@ -76,6 +77,7 @@ struct LibraryView {
       .onAppear {
         print("Library appear current: \(Screens.current)")
       }
+    }
   }
 }
 

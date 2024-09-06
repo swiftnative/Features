@@ -27,6 +27,7 @@ struct MusicApp: App {
   }
 }
 
+
 final class MyMusicApp: ObservableObject {
   var favorite: [Song] = [.aristocrat, .elPoblema, .someSong]
   var playlists: [Playlist] = [.favorite, .relax]

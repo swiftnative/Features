@@ -8,6 +8,7 @@
 import ScreensBrowser
 import SwiftUI
 
+
 extension UINavigationController {
   func index(of vc: UIViewController) -> Int? {
     if vc.parent == self {
