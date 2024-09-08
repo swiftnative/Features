@@ -22,10 +22,11 @@ public protocol ScreenProxy: CustomStringConvertible {
 
   func sheet<S: Screen, M1: ViewModifier, M2: ViewModifier>(_ screen: S, modifier: M1, _ modifier2: M2)
 
-
   var stack: StackProxy? { get }
 
   func popToRoot()
+  
+  func close()
 
   var id: ScreenID { get}
 }

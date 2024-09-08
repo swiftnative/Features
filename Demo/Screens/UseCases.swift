@@ -57,7 +57,7 @@ private struct UseCasesScreenBody: View {
         .padding(.horizontal)
 
         switch nestedType {
-          case .tabs:
+        case .tabs:
           TabView(selection: $page) {
             NavigationPage()
               .tag(Page.one)
@@ -119,16 +119,18 @@ private struct NavigationPage {
         Text("Push ( SwiftUI )")
       }
 
-//      Section("Push-On-Appearance") {
-//        Text("Test behavior when screen pushed right in onAppear for fullscreen presentation")
-//
-//        Button("Screens") {
-//          Screens.current.fullscreen(PushOnAppearScreens(), modifier: .inStack)
-//        }
-//        Button("Native") {
-//          Screens.current.fullscreen(PushOnAppearNative(), modifier: .inStack)
-//        }
-//      }
+      if #available(iOS 17.0, *) {
+        Section("Push-On-Appearance") {
+          Text("Test behavior when screen pushed right in onAppear for fullscreen presentation")
+
+          Button("Screens") {
+            Screens.current.fullscreen(PushOnAppearScreens(), modifier: .inStack)
+          }
+          Button("Native") {
+            Screens.current.fullscreen(PushOnAppearNative(), modifier: .inStack)
+          }
+        }
+      }
     }
     .onScreenAppear { appearance in
       appearanceInfo = appearance.appearance.description + " " + Date.now.formatted(.dateTime.hour().minute().second())

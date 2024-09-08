@@ -12,7 +12,7 @@ struct PushOnAppearScreens {
   
   var screenBody: some View {
     TestScreen()
-      .onAppear {
+      .onScreenAppear { _ in
         Screens.push(TestScreen())
       }
   }

@@ -88,6 +88,9 @@ fileprivate struct TestView:  View {
       if let appearance {
         Text("Appearance")
           .font(.title2)
+        let time = Date(timeIntervalSinceReferenceDate: appearance.lastAppearAt)
+        Text("At: \(time, format: .dateTime.hour().minute().second())")
+          .font(.subheadline.monospaced())
         Text("Current: \(appearance.appearance)")
           .font(.subheadline.monospaced())
         Text("First: \(appearance.firstAppearance)")
@@ -124,6 +127,9 @@ fileprivate struct TestView:  View {
           }
           Button("Pop-to-Root") {
             Screens.popToRoot()
+          }
+          Button("Close") {
+            Screens.close()
           }
         }
 

@@ -35,6 +35,10 @@ public extension Screens {
     delegate.action(.popToRoot, screen: EmptyScreen(), params: nil)
   }
 
+  static func close() {
+    delegate.action(.close, screen: EmptyScreen(), params: nil)
+  }
+
   static func dismiss() {
     delegate.action(.dismiss, screen: EmptyScreen(), params: nil)
   }

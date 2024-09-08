@@ -63,6 +63,10 @@ extension ScreenController: ScreenProxy {
       innerNC.popToRootViewController(animated: true)
     }
   }
+
+  public func close() {
+    viewController?.dismiss(animated: true)
+  }
 }
 
 public extension ViewModifier where Self == EmptyModifier {

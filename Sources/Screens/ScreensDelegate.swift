@@ -60,6 +60,8 @@ public extension ScreensDelegate {
       Screens.current.dismiss()
     case .popToRoot:
       Screens.current.popToRoot()
+    case .close:
+      Screens.current.close()
     default:
       print("Unknown screen action: \(action)")
       break
