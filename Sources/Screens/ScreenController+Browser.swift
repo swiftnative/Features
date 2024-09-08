@@ -27,15 +27,15 @@ extension ScreenController {
                          parentAddress: parentAddress)
   }
 
-  func screenshot() {
-    guard let parentVC else { return }
+  var screenShoot: ScreenShoot? {
+    guard let parentVC else { return nil }
     UIGraphicsBeginImageContext(parentVC.view.frame.size)
     parentVC.view.layer.render(in: UIGraphicsGetCurrentContext()!)
     let image = UIGraphicsGetImageFromCurrentImageContext()
     UIGraphicsEndImageContext()
 
-    guard let data = image?.jpegData(compressionQuality: 1) else { return }
+    guard let data = image?.jpegData(compressionQuality: 1) else { return nil}
     let screenShot = ScreenShoot(screenID: id, data: data)
-    Screens.shared.screen(shot: screenShot)
+    return screenShot
   }
 }

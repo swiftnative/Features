@@ -4,9 +4,9 @@
 import Foundation
 
 public struct ScreenEvent: CustomStringConvertible, Codable {
-  let screenStaticID: ScreenStaticID
-  let id: ScreenID
-  let kind: Kind
+  public let screenStaticID: ScreenStaticID
+  public let id: ScreenID
+  public let kind: Kind
 
   public enum Kind: Codable, CustomStringConvertible {
     case didAppear(detached: Bool, appearance: ScreenAppearance)

@@ -20,34 +20,61 @@ struct UseCasesScreen {
 }
 
 private struct UseCasesScreenBody: View {
-  @State var selectedPage: Pages = .navigation
+  @State var nestedType: NestedType = .tabs
+  @State var page: Page = .one
 
-  enum Pages: String {
-    case navigation
-    case actions
+  enum NestedType: String {
+    case tabs
+    case condition
+  }
+
+  enum Page: Hashable {
+    case one
+    case two
   }
 
   var body: some View {
     ScreenStack {
       VStack {
-        Picker("Tab", selection: $selectedPage) {
-          Text("Navigation")
-            .tag(Pages.navigation)
+        Picker("Nested Type", selection: $nestedType) {
+          Text("TabView")
+            .tag(NestedType.tabs)
 
-          Text("Actions")
-            .tag(Pages.actions)
+          Text("Condition")
+            .tag(NestedType.condition)
         }
         .pickerStyle(SegmentedPickerStyle())
         .padding(.horizontal)
-      }
-      TabView(selection: $selectedPage) {
-        NavigationPage()
-          .tag(Pages.navigation  )
 
-        ActionsPage()
-          .tag(Pages.actions)
+        Picker("Page", selection: $page) {
+          Text("One")
+            .tag(Page.one)
+
+          Text("Two")
+            .tag(Page.two)
+        }
+        .pickerStyle(SegmentedPickerStyle())
+        .padding(.horizontal)
+
+        switch nestedType {
+          case .tabs:
+          TabView(selection: $page) {
+            NavigationPage()
+              .tag(Page.one)
+
+            ActionsPage()
+              .tag(Page.two)
+          }
+          .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
+
+        case .condition:
+          if page == .one {
+            NavigationPage()
+          } else {
+            ActionsPage()
+          }
+        }
       }
-      .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
       .navigationTitle("Screens")
     }
   }

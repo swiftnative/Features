@@ -55,6 +55,7 @@ extension ScreenController: ScreenProxy {
 
   public func popToRoot() {
     if let rootNC {
+      outerNC?.popToRootViewController(animated: false)
       rootNC.popToRootViewController(animated: true)
     } else if let outerNC {
       outerNC.popToRootViewController(animated: true)

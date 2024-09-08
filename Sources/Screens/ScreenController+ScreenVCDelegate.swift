@@ -29,15 +29,10 @@ extension ScreenController: ScreenViewControllerDelegate {
   func viewDidAppear(_ animated: Bool) {
     isAppearing = false
     isDisappearing = false
-    if firstAppearanceStack == nil {
-      self.firstAppearanceStack = stack
-    }
-    Screens.shared.screen(stateUpdated: self)
   }
 
   func viewDidDisappear(_ animated: Bool) {
     isDisappearing = false
     isAppearing = false
-    Screens.shared.screen(stateUpdated: self)
   }
 }

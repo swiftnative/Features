@@ -10,14 +10,14 @@ public struct ScreenAction: Hashable, Codable, CustomStringConvertible {
 
   let rawValue: String
   public init(_ rawValue: String) {
-    self.rawValue = rawValue
+    self.rawValue = rawValue.lowercased()
   }
 
   public static let fullscreen = Self("fullscreen")
   public static let sheet = Self("sheet")
   public static let push = Self("push")
   public static let dismiss = Self("dismiss")
-  public static let state = Self("state")
+  public static let popToRoot = Self("poptoroot")
 
   public var description: String { rawValue }
 }

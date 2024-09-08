@@ -43,8 +43,8 @@ public final class Screens: NSObject, ObservableObject {
   var current: ScreenController? {
 
     let appeared = controllers.all()
-      .filter { $0.isAppeared && !$0.isDisappearing && $0.childs.isEmpty }
-    
+      .filter { $0.isAppeared && !$0.isDisappearing && $0.visibleChilds.isEmpty }
+
     let node = appeared
       .sorted(by: { $0.appearance!.lastAppearAt > $1.appearance!.lastAppearAt }).first
 
@@ -56,6 +56,17 @@ public final class Screens: NSObject, ObservableObject {
                             staticID: controller.staticID,
                             kind: kind)
     screen(event: event)
+
+    switch kind {
+    case .didAppear:
+      browser?.synchronize()
+      if let shot = controller.screenShoot {
+        browser?.send(message: .screenShoot(shot))
+      }
+    case .didDisappear:
+      browser?.synchronize()
+    default: break
+    }
   }
 
   func screen(event: ScreenEvent) {
@@ -71,14 +82,6 @@ public final class Screens: NSObject, ObservableObject {
 
   func screen(removed: ScreenID) {
     controllers.compact()
-    browser?.synchronize()
-  }
-
-  func screen(shot: ScreenShoot) {
-    browser?.send(message: .screenShoot(shot))
-  }
-
-  func screen(stateUpdated controller: ScreenController) {
     browser?.synchronize()
   }
 

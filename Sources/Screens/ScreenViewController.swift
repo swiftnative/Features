@@ -53,32 +53,32 @@ final class ScreenViewController: UIViewController {
   }
 
   override func viewDidLoad() {
-    delegate?.viewDidLoad()
     Logger.uikit.log("\(self.logID) viewDidLoad")
+    delegate?.viewDidLoad()
     super.viewDidLoad()
   }
 
   override func viewWillAppear(_ animated: Bool) {
-    delegate?.viewWillAppear(animated)
     Logger.uikit.log("\(self.logID) viewWillAppear [p:\(self.isBeingPresented) d:\(self.isBeingDismissed) mtp:\(self.isMovingToParent) mfp:\(self.isMovingFromParent)] ")
+   delegate?.viewWillAppear(animated)
     super.viewWillAppear(animated)
   }
 
   override func viewWillDisappear(_ animated: Bool) {
-    delegate?.viewWillDisappear(animated)
     Logger.uikit.log("\(self.logID) viewWillDisappear [p:\(self.isBeingPresented) d:\(self.isBeingDismissed) mtp:\(self.isMovingToParent) mfp:\(self.isMovingFromParent)]")
+    delegate?.viewWillDisappear(animated)
     super.viewWillDisappear(animated)
   }
 
   override func viewDidAppear(_ animated: Bool) {
-    delegate?.viewDidAppear(animated)
     Logger.uikit.log("\(self.logID) viewDidAppear [p:\(self.isBeingPresented) d:\(self.isBeingDismissed) mtp:\(self.isMovingToParent) mfp:\(self.isMovingFromParent)]")
+    delegate?.viewDidAppear(animated)
     super.viewDidAppear(animated)
   }
 
   override func viewDidDisappear(_ animated: Bool) {
-    delegate?.viewDidDisappear(animated)
     Logger.uikit.debug("\(self.logID) viewDidDisappear [p:\(self.isBeingPresented) d:\(self.isBeingDismissed) mtp:\(self.isMovingToParent) mfp:\(self.isMovingFromParent)]")
+    delegate?.viewDidDisappear(animated)
     super.viewDidDisappear(animated)
   }
 

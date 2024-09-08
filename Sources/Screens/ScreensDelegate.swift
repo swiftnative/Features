@@ -20,8 +20,6 @@ public protocol ScreensDelegate {
   func action<S: Screen>(_ action: ScreenAction, screen: S, params: ScreenAction.Params?)
 
   func event(event: ScreenEvent)
-//
-//  func view<S: Screen>(for screen: S, request: ScreenAppearRequest.Kind) -> AnyView
 }
 
 public extension ScreensDelegate {
@@ -60,13 +58,11 @@ public extension ScreensDelegate {
       Screens.current.sheet(screen)
     case .dismiss:
       Screens.current.dismiss()
+    case .popToRoot:
+      Screens.current.popToRoot()
     default:
       print("Unknown screen action: \(action)")
       break
     }
   }
-//
-//  func view<S: Screen>(for screen: S, request: ScreenAppearRequest.Kind) -> AnyView {
-//    AnyView(screen)
-//  }
 }

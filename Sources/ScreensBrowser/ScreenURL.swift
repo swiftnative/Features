@@ -71,4 +71,5 @@ public struct ScreenURL: Hashable, Codable, CustomStringConvertible {
 
 public extension ScreenURL {
   static var dismiss: Self { .init(host: .dismiss) }
+  static var popToRoot: Self { .init(host: .popToRoot) }
 }

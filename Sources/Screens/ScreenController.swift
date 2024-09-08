@@ -41,6 +41,7 @@ public final class ScreenController:  ObservableObject {
   public private(set) var parentScreenID: ScreenID?
   public private(set) var parentAddress: Int?
   public private(set) var childs = Set<ScreenID>()
+  public private(set) var visibleChilds = Set<ScreenID>()
 
   var parentScreen: ScreenController? {
     guard let parentScreenID else { return nil }
@@ -60,6 +61,7 @@ public final class ScreenController:  ObservableObject {
   let onScreenAppear = PassthroughSubject<ScreenAppearance, Never>()
 
   private(set) var appearance: ScreenAppearance?
+  private static var lastDisaparedWasPopped: Bool = false
 
   /// Navigation
   @Published var fullcreen: ScreenAppearRequest?
@@ -133,7 +135,8 @@ public final class ScreenController:  ObservableObject {
 
   var isAppearing: Bool = false
   var isDisappearing: Bool = false
-  private var isPopping: Bool = false
+  var isUpdatingAppearance: Bool = false
+
   var isAppeared: Bool {
     guard let appearance else { return false }
     return appearance.appearance != .dissapeared
@@ -153,29 +156,28 @@ public final class ScreenController:  ObservableObject {
 
   deinit {
     Logger.swiftui.log("\(self.logID) deinit \(self.address.pointer)")
-    parentScreen?.child(detached: id)
+    parentScreen?.child(disappeared: id)
     Screens.shared.screen(removed: id)
   }
 
   //MARK: SwiftUI
   func onNavigationDestinationAppear() {
-    hasNavigationDestination = true
-    guard innerNC != nil, !isAppearing else { return }
     Logger.swiftui.log("\(self.logID) screenDestinationOnAppear")
+    hasNavigationDestination = true
+    guard !isAppearing else { return }
     isAppearing = true
     isDisappearing = false
 
     screenWillAppear(update: true)
   }
-  
+
   func onAppear() {
     Logger.swiftui.log("\(self.logID) onAppear \(self.detached ? "(detached)" : "") \(self.isPresented ? "(presented)" : "")")
-
     guard !isAppearing else { return }
     isAppearing = true
     isDisappearing = false
     if appearance == nil {
-      screenWillAppearIfNeedWithDelay()
+      doFirstAppearanceIfNeedWithDelay()
     } else {
       screenWillAppear()
     }
@@ -199,7 +201,6 @@ public final class ScreenController:  ObservableObject {
     guard parent != .zero, parentScreenID == nil else { return }
     self.parentScreenID = parent
     self.parentAddress = address
-    self.parentScreen?.child(attached: id)
   }
 
   /// ``ScreenProxy``
@@ -208,129 +209,118 @@ public final class ScreenController:  ObservableObject {
   }
 
   // MARK: Private Magic
-  private func screenWillAppearIfNeedWithDelay() {
+  private func doFirstAppearanceIfNeedWithDelay() {
     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(30)) { [weak self] in
-      self?.screenWillAppearIfNeed()
+      self?.doFirstAppearanceIfNeed()
     }
   }
 
-  private func screenWillAppearIfNeed() {
+  private func doFirstAppearanceIfNeed() {
     guard let parentScreen, appearance == nil && detached else { return }
 
-    if parentScreen.isTabBar ||  parentScreen.appearance == nil  {
-      return // apperance will happened when switched to this screen
-    }
+    // Apperance will happened when switched to this screen
+    if parentScreen.isTabBar  { return }
+
+    // Screen can appear only if parent appeared
+    if parentScreen.appearance == nil { return }
 
     screenWillAppear()
   }
 
-  private func screenWillDisappearWithDelay() {
-    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(30)) { [weak self] in
-      self?.onDissappear()
+  // MARK: Screens
+  func screenWillAppear(update: Bool = false) {
+    guard !isAppeared || update, !isUpdatingAppearance else { return }
+    isUpdatingAppearance = true
+    DispatchQueue.main.async { [weak self] in
+      self?.updateAppearance()
     }
   }
 
-  // MARK: Screens
-  func screenWillAppear(update: Bool = false) {
-    guard let viewController, (!isAppeared || update) else { return }
+
+  func screenWillDisappear() {
+    guard let appearance, appearance.appearance != .dissapeared else { return }
+    self.appearance!.appearance = .dissapeared
+    parentScreen?.child(disappeared: id)
+
+    if let firstAppearanceStack,
+          firstAppearanceStack.index > 0,
+       firstAppearanceStack != stack {
+      Self.lastDisaparedWasPopped = true
+    } else {
+      Self.lastDisaparedWasPopped = false
+    }
+
+    Screens.shared.screen(kind: .didDisappear, for: self)
+    Logger.screens.log("\(self.logID) disappeared poped: \(Self.lastDisaparedWasPopped)")
+  }
+
+
+  private func updateAppearance() {
+    guard let viewController else { return }
 
     defer {
       isAppearing = false
       isDisappearing = false
     }
 
-    if firstAppearanceStack == nil {
-      self.firstAppearanceStack = stack
-    }
+    let isFirstAppearance = self.appearance == nil
 
-    if appearance == nil {
+    var newAppearance = self.appearance ?? ScreenAppearance()
+    newAppearance.count += 1
+
+    if isFirstAppearance {
 
       if innerNC != nil, !hasNavigationDestination {
         log(error: "has inner navigation controller but not a scree navigation destination")
       }
 
-      self.appearance = buildFirstAppearance(viewController: viewController,
-                                             parentScreen: parentScreen,
-                                             stack: stack)
-    } else {
-      if isPopping {
-        self.appearance?.appearance = .poppedTo
-        isPopping = false
+      if let parentScreen, parentScreen.viewController?.parent == viewController.parent || parentScreen.isTabBar {
+        newAppearance.nested = true
+      } else if detached {
+        newAppearance.nested = true
+      }
+
+      if let stack, stack.index > 0 {
+        newAppearance.firstAppearance = .pushed
+      } else if viewController.sheetPresentationController != nil,
+                viewController.presentingViewController != nil {
+        newAppearance.firstAppearance = .sheet
+      } else if viewController.presentingViewController != nil {
+        newAppearance.firstAppearance = .fullscreen
       } else {
-        self.appearance?.appearance = .other
+        newAppearance.firstAppearance = .other
       }
-    }
+      newAppearance.appearance = newAppearance.firstAppearance
 
-    appearance!.count += 1
-
-    guard let appearance else { fatalError("appearance is nil") }
-
-    DispatchQueue.main.async { [weak self] in
-      guard let self else { return }
-      self.onScreenAppear.send(appearance)
-      Logger.screens.log("\(self.logID) appear via: \(appearance.description)")
-      Screens.shared.screen(kind: .didAppear(detached: self.detached, appearance: appearance), for: self)
-      Screens.shared.screen(stateUpdated: self)
-      self.screenshot()
-    }
-  }
-
-  func screenWillDisappear() {
-    guard let appearance, appearance.appearance != .dissapeared else { return }
-    self.appearance!.appearance = .dissapeared
-
-    notifyIFPreviousScreensToBePoped()
-    Screens.shared.screen(kind: .didDisappear, for: self)
-    Screens.shared.screen(stateUpdated: self)
-    Logger.screens.log("\(self.logID) disappeared")
-  }
-
-  func notifyIFPreviousScreensToBePoped() {
-    guard let firstAppearanceStack,
-          firstAppearanceStack.index > 0,
-          firstAppearanceStack != stack
-    else { return }
-
-    let indexToNotify = firstAppearanceStack.index - 1
-    Screens.shared.controllers.all()
-      .filter { screen in
-        screen.firstAppearanceStack?.stackID == firstAppearanceStack.stackID &&
-        screen.firstAppearanceStack?.index == indexToNotify
-      }
-      .forEach { screen in
-        screen.isPopping = true
-      }
-  }
-
-  private func buildFirstAppearance(viewController: UIViewController,
-                                    parentScreen: ScreenController?,
-                                    stack: StackProxy?) -> ScreenAppearance {
-    var appearance = ScreenAppearance()
-    if parentScreen?.viewController?.parent == viewController.parent {
-      appearance.nested = true
-    }
-
-    if let stack, stack.index > 0 {
-      appearance.firstAppearance = .pushed
-    } else if viewController.sheetPresentationController != nil,
-              viewController.presentingViewController != nil {
-      appearance.firstAppearance = .sheet
-    } else if viewController.presentingViewController != nil {
-      appearance.firstAppearance = .fullscreen
     } else {
-      appearance.firstAppearance = .other
+      newAppearance.appearance =  Self.lastDisaparedWasPopped ? .poppedTo : .other
     }
-    appearance.appearance = appearance.firstAppearance
-    return appearance
+
+    self.appearance = newAppearance
+
+    /// Sometime there is only place to get correct stack
+    setFirstAppearanceStackIfNil()
+    parentScreen?.child(appeared: id)
+    onScreenAppear.send(newAppearance)
+
+    Logger.screens.log("\(self.logID) appear via: \(newAppearance.description)")
+    Screens.shared.screen(kind: .didAppear(detached: self.detached, appearance: newAppearance), for: self)
+
+    isUpdatingAppearance = false
+  }
+
+  func setFirstAppearanceStackIfNil() {
+    guard firstAppearanceStack == nil else { return }
+    self.firstAppearanceStack = stack
   }
 
   // MARK: Childs
-  private func child(attached id: ScreenID){
-    childs.insert(id)
+  private func child(appeared id: ScreenID){
+    visibleChilds.insert(id)
   }
 
-  private func child(detached id: ScreenID){
-    childs.remove(id)
+  private func child(disappeared id: ScreenID){
+    visibleChilds.remove(id)
   }
 
   func log(error message: String) {
