@@ -53,7 +53,7 @@ public final class BrowserProxy: NSObject, ObservableObject {
   public func synchronize() {
     syncTimer?.invalidate()
 
-    syncTimer = Timer.scheduledTimer(withTimeInterval: 0.35, repeats: false, block: { [weak self] (timer) in
+    syncTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: false, block: { [weak self] (timer) in
       DispatchQueue.global(qos: .userInteractive).async { [weak self] in
         self?.delegate?.sendState()
       }

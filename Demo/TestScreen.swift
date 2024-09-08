@@ -122,6 +122,9 @@ fileprivate struct TestView:  View {
           Button("sheet") {
             Screens.sheet(screenToOpen.screen)
           }
+          Button("Pop-to-Root") {
+            Screens.popToRoot()
+          }
         }
 
         VStack {
