@@ -11,41 +11,29 @@ import os
 
 struct ScreenNavigationDestinationModifier: ViewModifier {
   @EnvironmentObject var controller: ScreenController
-  @Environment(\.screenID) var screenID
+  @EnvironmentObject var router: ScreenRouter
   @State var appeared: Bool = false
   @State var skip: Bool = false
+  @Environment(\.screen) var screenInfo
 
+  
   func body(content: Content) -> some View {
-    Group {
-      if skip {
-        content
-      } else {
-        content
-          .push(item: $controller.pushNavigationDestination) { $0.view }
+    let binding: Binding<ScreenRouteRequest?> = skip ? .constant(nil) : $router.pushNavigationDestination
+    content
+      .push(item: binding)
+      .onAppear { [weak controller] in
+        guard let controller else { return }
+        if !appeared {
+          skip = controller.hasNavigationDestination
+          appeared = true
+          controller.hasNavigationDestination = true
+        }
+        if !skip {
+          controller.onNavigationDestinationAppear()
+        }
       }
-    }
-    .onAppear { [weak controller] in
-      guard let controller else { return }
-      if !appeared {
-        skip = controller.hasNavigationDestination
-        appeared = true
-      }
-      if !skip {
-        controller.onNavigationDestinationAppear()
-      }
-    }
-//    .onDisappear { [weak controller] in
-//      guard let controller else { return }
-//      if !skip {
-//        guard controller.innerNC != nil else { return }
-//        Logger.swiftui.log("\(controller.logID) screenDestinationOnDisappear")
-//        controller.onDissappear()
-//      }
-//    }
   }
 }
-
-
 
 public extension View {
   var screenNavigationDestination: some View {

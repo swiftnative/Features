@@ -17,10 +17,14 @@ public protocol ScreenProxy: CustomStringConvertible {
   func push<S: Screen, M: ViewModifier>(_ screen: S, modifier: M)
   /// Apply modifier before fullscreen
   func fullscreen<S: Screen, M: ViewModifier>(_ screen: S, modifier: M)
+  /// Apply modifier before fullscreen
+  func fullscreen<S: Screen, M: ViewModifier, M2: ViewModifier>(_ screen: S, modifier: M, _ m2: M2)
   /// Present Sheet
   func sheet<S: Screen, M: ViewModifier>(_ screen: S, modifier: M)
 
-  func sheet<S: Screen, M1: ViewModifier, M2: ViewModifier>(_ screen: S, modifier: M1, _ modifier2: M2)
+  func sheet<S: Screen, M1: ViewModifier, M2: ViewModifier>(_ screen: S, modifiers: M1, _ m2: M2)
+  
+  func sheet<S: Screen, M1: ViewModifier, M2: ViewModifier, M3: ViewModifier>(_ screen: S, modifiers: M1, _ m2: M2, _ m3: M3)
 
   var stack: StackProxy? { get }
 

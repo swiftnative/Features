@@ -8,6 +8,7 @@
 import SwiftUI
 import ScreensUI
 
+
 @Screen(alias: "Simple")
 struct TestScreen {
   var screenBody: some View {
@@ -45,7 +46,7 @@ struct TestNestedScreenStackWrapped {
 }
 
 
-fileprivate struct TestView:  View {
+struct TestView:  View {
   @State var current: String = Screens.current.description
   @Environment(\.screen) var screen
   @State var appearance: ScreenAppearance?
@@ -180,7 +181,7 @@ fileprivate struct TestView:  View {
     .onScreenAppear {
       current = Screens.current.description
       appearance = $0
-      logger.debug("\(screen.description) onScreenAppear")
+//      logger.debug("\(screen.description) onScreenAppear")
     }
     .padding()
     .navigationTitle(screen.description)

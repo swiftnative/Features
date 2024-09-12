@@ -10,24 +10,29 @@ import os
 public struct ScreenModifier: ViewModifier {
 
   @StateObject private var controller: ScreenController
+  @StateObject private var router: ScreenRouter
   @Environment(\.isPresented) var isPresented
   @Environment(\.dismiss) var dismiss
   @Environment(\.screenID) var parentScreenID
   @Environment(\.screenAddress) var parentScreenAddress
+  @Environment(\.detachedScreen) var detachedScreen
 
   public init<S: Screen>(_ screen: S.Type, alias: String?) {
     _controller = StateObject(wrappedValue: ScreenController(staticID: screen.screenID, alias: alias))
+    _router = StateObject(wrappedValue: ScreenRouter())
   }
 
   public func body(content: Content) -> some View {
     content
-      .fullScreenCover(item: $controller.fullcreen) { $0.view }
-      .sheet(item: $controller.sheet) { $0.view }
-      .push(item: $controller.pushOuter) { $0.view }
+      .fullScreenCover(item: $router.fullcreen) { $0.view }
+      .sheet(item: $router.sheet) { $0.view }
+      .push(item: $router.pushOuter)
       .environmentObject(controller)
+      .environmentObject(router)
       .environment(\.screenID, controller.id)
       .environment(\.screenAddress, controller.address)
       .environment(\.screen, controller.screenInfo)
+      .environment(\.detachedScreen, false)
       .onChange(of: isPresented, perform: { [weak controller] newValue in
         controller?.onIsPresentedChanged(newValue)
       })
@@ -44,10 +49,14 @@ public struct ScreenModifier: ViewModifier {
       }
       .onAppear { [weak controller] in
         controller?.set(parent: parentScreenID, address: parentScreenAddress)
+        controller?.detachedScreen = detachedScreen
         controller?.isPresented = isPresented
         controller?.onAppear()
       }
-
+      .task { [weak controller, weak router] in
+        controller?.router = router
+        router?.controller = controller
+      }
   }
 }
 
@@ -57,9 +66,8 @@ private struct ViewControllerAccessor: UIViewControllerRepresentable {
 
   func makeUIViewController(context: Context) -> ScreenViewController {
     let vc = ScreenViewController(id: controller.id, staticID: controller.staticID)
-    vc.delegate = controller
-    controller.viewController = vc
-//    Logger.swiftui.log("\(controller.logID) makeUIViewController \(vc.vcID.pointer)")
+    controller.set(vc: vc)
+    Logger.swiftui.log("\(controller.logID) makeUIViewController \(vc.vcID.pointer)")
     return vc
   }
 

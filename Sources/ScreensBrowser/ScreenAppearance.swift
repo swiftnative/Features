@@ -10,13 +10,9 @@ public struct ScreenAppearance: Codable, Hashable, CustomStringConvertible {
 
   public var appearance: Appearance = .dissapeared
   public var isFirstAppearance: Bool { count == 0 }
-  public var count: Int = 0 {
-    didSet {
-      lastAppearAt = CFAbsoluteTimeGetCurrent()
-    }
-  }
+  public var count: Int = 0 
   public var firstAppearance: Appearance = .dissapeared
-  public private(set) var lastAppearAt: CFAbsoluteTime = 0
+  public var lastAppearAt: CFAbsoluteTime = 0
   public var nested: Bool = false
 
   public enum Appearance: Codable, CustomStringConvertible {

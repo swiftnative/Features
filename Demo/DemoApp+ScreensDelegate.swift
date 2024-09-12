@@ -6,19 +6,11 @@
 import Foundation
 import ScreensUI
 
-extension MusicApp: ScreensDelegate {
+extension DemoApp: ScreensDelegate {
 
   var screens: [any Screen.Type] {
-    [SongView.self,
-     TabScreen.self,
-     LoginForm.self,
-     InfoScreen.self,
-     ChoseThemeScreen.self,
-     SettingsView.self,
-     PlaylistView.self,
-     MyMusicView.self,
-     LibraryView.self,
-     MusicantScreen.self]
+    [Dog.self,
+     Cat.self]
   }
 
 
@@ -28,7 +20,7 @@ extension MusicApp: ScreensDelegate {
       Screens.current.fullscreen(screen, modifier: .closeButton)
     case .sheet:
       if #available(iOS 16.0, *) {
-        Screens.current.sheet(screen, modifier: .detents(.medium, .large), .closeButton)
+        Screens.current.sheet(screen, modifiers: .detents(.medium, .large), .closeButton)
       } else {
         Screens.current.sheet(screen, modifier: .closeButton)
       }

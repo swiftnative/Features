@@ -6,18 +6,18 @@
 //
 
 import SwiftUI
+import ScreensUI
 
 @Screen
-struct PushOnAppearScreens {
-  
+struct PushOnAppear {
+
   var screenBody: some View {
-    TestScreen()
-      .onScreenAppear { _ in
-        Screens.push(TestScreen())
-      }
+    Cat(onScreenAppear: { _ in
+      Screens.push(Dog())
+    })
   }
 }
 
 #Preview {
-  PushOnAppearScreens()
+  PushOnAppear()
 }

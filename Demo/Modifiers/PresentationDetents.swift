@@ -7,19 +7,36 @@
 
 import SwiftUI
 
-@available(iOS 16.0, *)
 struct PresentationDetentsModifier: ViewModifier {
-  let detents: Set<PresentationDetent>
+  let detents: Set<Detent>
+
+  enum Detent: Hashable {
+    case medium
+    case large
+
+    @available(iOS 16.0, *)
+    var presentationDetent: PresentationDetent {
+      switch self {
+      case .medium: return .medium
+      case .large: return .large
+      }
+    }
+  }
 
   func body(content: Content) -> some View {
-    content
-      .presentationDetents(detents)
+    if #available(iOS 16.0, *) {
+      content
+        .presentationDetents(Set(detents.map { $0.presentationDetent }))
+    } else {
+      content
+    }
+
   }
 }
 
-@available(iOS 16.0, *)
 extension ViewModifier where Self == PresentationDetentsModifier {
-  static func detents(_ detents: PresentationDetent...) -> Self {
+  static func detents(_ detents: PresentationDetentsModifier.Detent...) -> Self {
     PresentationDetentsModifier(detents: Set(detents))
   }
 }
+

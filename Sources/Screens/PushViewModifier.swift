@@ -7,85 +7,43 @@
 
 import SwiftUI
 
-extension View {
-  func push<Content>(item: Binding<ScreenAppearRequest?>, @ViewBuilder content: @escaping (ScreenAppearRequest) -> Content) -> some View where Content : View {
-//    Group {
-//      if #available(iOS 17.0, *) {
-//        modifier(PushViewModifierStack(item: item, pushContent: content))
-//      } else {
-        modifier(PushViewModifier(item: item, pushContent: content))
-//      }
-//    }
-  }
-}
-
-
-@available(iOS 17.0, *)
-public struct PushViewModifierStack<PushContent: View>: ViewModifier {
-  @Binding var item: ScreenAppearRequest?
-  @ViewBuilder var pushContent: (ScreenAppearRequest) -> PushContent
-
-  public init(item: Binding<ScreenAppearRequest?>,
-              @ViewBuilder pushContent: @escaping (ScreenAppearRequest) -> PushContent) {
-    self._item = item
-    self.pushContent = pushContent
-  }
-
-  public func body(content: Content) -> some View {
-    content
-      .navigationDestination(item: $item, destination: pushContent)
-  }
-}
-
-fileprivate struct PushViewModifier<PushContent: View>: ViewModifier {
-  @Binding var item: ScreenAppearRequest?
-  @ViewBuilder var pushContent: (ScreenAppearRequest) -> PushContent
+struct PushViewModifier: ViewModifier {
+  @Binding var item: ScreenRouteRequest?
   @State var presented: Bool = false
+
+  var pushedScreen: some View {
+    PushedScreen(item: item)
+  }
+
+  private var isActiveBinding: Binding<Bool> {
+    Binding(
+      get: { item != nil },
+      set: { isShowing in
+        guard !isShowing else { return }
+        guard item != nil else { return }
+        item = nil
+      }
+    )
+  }
+
+  struct PushedScreen: View {
+    var item: ScreenRouteRequest?
+
+    var body: some View {
+      if let item {
+        item.view
+      }
+    }
+  }
 
   func body(content: Content) -> some View {
     content
-      .onChange(of: presented, perform: { newValue in
-        if newValue == false {
-          item = nil
-        }
-      })
-      .onChange(of: item, perform: { newValue in
-        presented = item != nil
-      })
-      .onAppear {
-        presented = item != nil
-      }
-      .background(NavigationLink(isActive: $presented) {
-          if let item {
-            pushContent(item)
-          } else {
-              EmptyView()
-          }
-      } label: {
-          EmptyView()
-      })
+      ._navigationDestination(isActive: isActiveBinding, destination: pushedScreen)
   }
 }
 
-public extension Binding where Value == Bool {
-    init<Wrapped>(bindingOptional: Binding<Wrapped?>) {
-        self.init(
-            get: {
-                bindingOptional.wrappedValue != nil
-            },
-            set: { newValue in
-                guard newValue == false else { return }
-
-                /// We only handle `false` booleans to set our optional to `nil`
-                /// as we can't handle `true` for restoring the previous value.
-                bindingOptional.wrappedValue = nil
-            }
-        )
-    }
-}
-
-extension Binding {
-    public func mappedToBool<Wrapped>() -> Binding<Bool> where Value == Wrapped? {
-        return Binding<Bool>(bindingOptional: self)
-    }
+extension View {
+  func push(item: Binding<ScreenRouteRequest?>) -> some View {
+    modifier(PushViewModifier(item: item))
+  }
 }

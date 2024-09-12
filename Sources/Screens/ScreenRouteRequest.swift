@@ -7,7 +7,7 @@
 import Foundation
 import SwiftUI
 
-public struct ScreenAppearRequest: Hashable, Identifiable, CustomDebugStringConvertible {
+public struct ScreenRouteRequest: Hashable, Identifiable, CustomDebugStringConvertible {
 
   public typealias RequestID = UInt
 
@@ -16,6 +16,7 @@ public struct ScreenAppearRequest: Hashable, Identifiable, CustomDebugStringConv
   public let screenStaticID: ScreenStaticID
   public let view: AnyView
   public var animation: Bool = false
+  var kind: RouteKind
 
   let requestID: RequestID = {
     let value = Self.counter
@@ -25,11 +26,12 @@ public struct ScreenAppearRequest: Hashable, Identifiable, CustomDebugStringConv
 
   public var id: RequestID { requestID }
 
-  public init(screenStaticID: ScreenStaticID, view: AnyView) {
+  public init(screenStaticID: ScreenStaticID, view: AnyView, kind: RouteKind) {
     self.screenStaticID = screenStaticID
     self.view = view
+    self.kind = kind
   }
-
+  
   public struct Kind: Hashable, Codable, CustomStringConvertible {
     public var description: String { rawValue }
 
@@ -40,7 +42,7 @@ public struct ScreenAppearRequest: Hashable, Identifiable, CustomDebugStringConv
     public static let push: Self = .init(rawValue: "push")
   }
 
-  public static func == (lhs: ScreenAppearRequest, rhs: ScreenAppearRequest) -> Bool {
+  public static func == (lhs: ScreenRouteRequest, rhs: ScreenRouteRequest) -> Bool {
     lhs.requestID == rhs.requestID
   }
 

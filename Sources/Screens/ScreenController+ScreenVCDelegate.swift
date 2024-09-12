@@ -4,35 +4,36 @@
 //
 //  Created by Alexey Nenastev on 5.9.24..
 //
-
+import UIKit
 
 extension ScreenController: ScreenViewControllerDelegate {
 
   func viewDidLoad() {
-    guard didLoad == false else { return }
+    // Иногда происходит вызов несколько раз, пример - пуш экрана из вложенного экрана 
+    guard !viewDidLoaded else { return }
     Screens.shared.screen(created: self)
-    didLoad = true
+    viewDidLoaded = true
   }
 
   func viewWillAppear(_ animated: Bool) {
-    isAppearing = true
-    screenWillAppear()
+    readyToRoute = false
   }
 
   func viewWillDisappear(_ animated: Bool) {
-    guard !isDisappearing else { return }
-    isDisappearing = true
-    isAppearing = false
-    screenWillDisappear()
+    readyToRoute = false
   }
 
   func viewDidAppear(_ animated: Bool) {
-    isAppearing = false
-    isDisappearing = false
+    if appearance == nil {
+      screenDidAppearFirstTime()
+    } else if let appearance, appearance.appearance == .dissapeared {
+      screenDidAppearAgain()
+    }
+    readyToRoute = true
   }
 
   func viewDidDisappear(_ animated: Bool) {
-    isDisappearing = false
-    isAppearing = false
+    readyToRoute = false
+    screenDidDisappear()
   }
 }

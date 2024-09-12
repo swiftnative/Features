@@ -15,7 +15,7 @@ final class ScreenViewController: UIViewController {
   var detached: Bool { parent == nil }
   var notifiedWillPoppedBack = false
   override var description: String { "\(logID)-\(vcID.pointer)" }
-  override var debugDescription: String { "\(logID)-\(vcID.pointer)" }
+  override var debugDescription: String { "\(logID)-\(address.pointer)\(delegate == nil ? " (no screen)" : "")" }
 
 
   weak var delegate: ScreenViewControllerDelegate?
@@ -31,7 +31,7 @@ final class ScreenViewController: UIViewController {
   }
 
   deinit {
-    Logger.uikit.log("\(self.logID) vc deinit \(self.address.pointer)")
+    Logger.uikit.log("\(self.debugDescription) vc deinit")
   }
 
   var innerNC: UINavigationController? {
@@ -53,42 +53,42 @@ final class ScreenViewController: UIViewController {
   }
 
   override func viewDidLoad() {
-    Logger.uikit.log("\(self.logID) viewDidLoad")
+    Logger.uikit.log("\(self.debugDescription) viewDidLoad")
     delegate?.viewDidLoad()
     super.viewDidLoad()
   }
 
   override func viewWillAppear(_ animated: Bool) {
-    Logger.uikit.log("\(self.logID) viewWillAppear [p:\(self.isBeingPresented) d:\(self.isBeingDismissed) mtp:\(self.isMovingToParent) mfp:\(self.isMovingFromParent)] ")
+    Logger.uikit.log("\(self.debugDescription) viewWillAppear [p:\(self.isBeingPresented) d:\(self.isBeingDismissed) mtp:\(self.isMovingToParent) mfp:\(self.isMovingFromParent)] ")
    delegate?.viewWillAppear(animated)
     super.viewWillAppear(animated)
   }
 
   override func viewWillDisappear(_ animated: Bool) {
-    Logger.uikit.log("\(self.logID) viewWillDisappear [p:\(self.isBeingPresented) d:\(self.isBeingDismissed) mtp:\(self.isMovingToParent) mfp:\(self.isMovingFromParent)]")
+    Logger.uikit.log("\(self.debugDescription) viewWillDisappear [p:\(self.isBeingPresented) d:\(self.isBeingDismissed) mtp:\(self.isMovingToParent) mfp:\(self.isMovingFromParent)]")
     delegate?.viewWillDisappear(animated)
     super.viewWillDisappear(animated)
   }
 
   override func viewDidAppear(_ animated: Bool) {
-    Logger.uikit.log("\(self.logID) viewDidAppear [p:\(self.isBeingPresented) d:\(self.isBeingDismissed) mtp:\(self.isMovingToParent) mfp:\(self.isMovingFromParent)]")
+    Logger.uikit.log("\(self.debugDescription) viewDidAppear [p:\(self.isBeingPresented) d:\(self.isBeingDismissed) mtp:\(self.isMovingToParent) mfp:\(self.isMovingFromParent)]")
     delegate?.viewDidAppear(animated)
     super.viewDidAppear(animated)
   }
 
   override func viewDidDisappear(_ animated: Bool) {
-    Logger.uikit.debug("\(self.logID) viewDidDisappear [p:\(self.isBeingPresented) d:\(self.isBeingDismissed) mtp:\(self.isMovingToParent) mfp:\(self.isMovingFromParent)]")
+    Logger.uikit.debug("\(self.debugDescription) viewDidDisappear [p:\(self.isBeingPresented) d:\(self.isBeingDismissed) mtp:\(self.isMovingToParent) mfp:\(self.isMovingFromParent)]")
     delegate?.viewDidDisappear(animated)
     super.viewDidDisappear(animated)
   }
 
   override func didMove(toParent parent: UIViewController?) {
-    Logger.uikit.log("\(self.logID) didMove to:\(parent)")
+//    Logger.uikit.log("\(self.debugDescription) didMove to:\(parent)")
     super.didMove(toParent: parent)
   }
 
   override func willMove(toParent parent: UIViewController?) {
-    Logger.uikit.log("\(self.logID) willMove to:\(parent)")
+//    Logger.uikit.log("\(self.debugDescription) willMove to:\(parent)")
     super.willMove(toParent: parent)
   }
 }
