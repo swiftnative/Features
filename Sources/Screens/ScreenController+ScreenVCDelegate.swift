@@ -16,14 +16,17 @@ extension ScreenController: ScreenViewControllerDelegate {
   }
 
   func viewWillAppear(_ animated: Bool) {
+    isAppearing = true
     readyToRoute = false
   }
 
   func viewWillDisappear(_ animated: Bool) {
+    isAppearing = false
     readyToRoute = false
   }
 
   func viewDidAppear(_ animated: Bool) {
+    isAppearing = false
     if appearance == nil {
       screenDidAppearFirstTime()
     } else if let appearance, appearance.appearance == .dissapeared {
@@ -33,6 +36,7 @@ extension ScreenController: ScreenViewControllerDelegate {
   }
 
   func viewDidDisappear(_ animated: Bool) {
+    isAppearing = false
     readyToRoute = false
     screenDidDisappear()
   }

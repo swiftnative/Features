@@ -45,11 +45,16 @@ struct Tests {
         VStack(alignment: .leading, spacing: 10) {
 
           section("Base") {
-            button("FullScreen",
+            button("FullScreen (Stack-Wrapped)",
                    "Push Dog as Fullscreen") {
               Screens.current.fullscreen(Dog(), modifier: .screenStack, .closeButton)
             }
-            
+
+            button("FullScreen (Stack-Inside)",
+                   "Push Dogs as Fullscreen") {
+              Screens.current.fullscreen(Dogs(), modifier: .closeButton)
+            }
+
             button("Sheet",
                    "Push Dog as Sheet") {
               Screens.current.sheet(Dog(), modifiers: .screenStack, .closeButton, .detents(.medium, .large))
@@ -148,9 +153,9 @@ struct Tests {
               Screens.current.fullscreen(SwitchNestedTab(), modifier: .closeButton)
             }
 
-            button("Nested screens as Page",
+            button("Dog-Cat Carousel",
                    "Fullscreen Tab with style 'pages' wrapped in stack with nested screens") {
-              Screens.current.fullscreen(SwitchNestedPage(), modifier: .screenStack, .closeButton)
+              Screens.current.fullscreen(PetsCarousel(), modifier: .screenStack, .closeButton)
             }
           }
         }

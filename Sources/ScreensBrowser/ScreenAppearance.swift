@@ -13,10 +13,9 @@ public struct ScreenAppearance: Codable, Hashable, CustomStringConvertible {
   public var count: Int = 0 
   public var firstAppearance: Appearance = .dissapeared
   public var lastAppearAt: CFAbsoluteTime = 0
-  public var nested: Bool = false
 
   public enum Appearance: Codable, CustomStringConvertible {
-    case poppedTo
+    case popped
     case other
     case pushed
     case sheet
@@ -25,7 +24,7 @@ public struct ScreenAppearance: Codable, Hashable, CustomStringConvertible {
 
     public var description: String {
       switch self {
-      case .poppedTo: return "poppedTo"
+      case .popped: return "popped"
       case .other: return "other"
       case .pushed: return "pushed"
       case .sheet: return "sheet"

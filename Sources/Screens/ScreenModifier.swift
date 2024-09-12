@@ -24,6 +24,7 @@ public struct ScreenModifier: ViewModifier {
 
   public func body(content: Content) -> some View {
     content
+      .accessibilityIdentifier(controller.logID)
       .fullScreenCover(item: $router.fullcreen) { $0.view }
       .sheet(item: $router.sheet) { $0.view }
       .push(item: $router.pushOuter)
@@ -45,13 +46,21 @@ public struct ScreenModifier: ViewModifier {
         dismiss()
       })
       .onDisappear { [weak controller] in
-        controller?.onDissappear()
+        if detachedScreen {
+          controller?.detachedOnDisappear()
+        } else {
+          controller?.onDissappear()
+        }
       }
       .onAppear { [weak controller] in
         controller?.set(parent: parentScreenID, address: parentScreenAddress)
         controller?.detachedScreen = detachedScreen
         controller?.isPresented = isPresented
-        controller?.onAppear()
+        if detachedScreen {
+          controller?.detachedOnAppear()
+        } else {
+          controller?.onAppear()
+        }
       }
       .task { [weak controller, weak router] in
         controller?.router = router

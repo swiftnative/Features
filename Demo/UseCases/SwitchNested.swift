@@ -45,24 +45,26 @@ struct SwitchNestedTab: View {
 
 
 @Screen
-struct SwitchNestedPage: View {
+struct PetsCarousel: View {
   @State var animal: Animal = .cat
   var screenBody: some View {
-    TabView(selection: $animal) {
-      Cat()
-        .tabItem {
-          Label(Animal.cat.name, systemImage: Animal.cat.systemImage)
-        }
-        .tag(Animal.cat)
-
-      Dog()
-        .tabItem {
-          Label(Animal.dog.name, systemImage: Animal.dog.systemImage)
-        }
-        .tag(Animal.dog)
-    }
-    .tabViewStyle(.page(indexDisplayMode: .always))
-    .screenDetached
+//    ScreenStack {
+      TabView(selection: $animal) {
+        Cat()
+          .tabItem {
+            Label(Animal.cat.name, systemImage: Animal.cat.systemImage)
+          }
+          .tag(Animal.cat)
+        
+        Dog()
+          .tabItem {
+            Label(Animal.dog.name, systemImage: Animal.dog.systemImage)
+          }
+          .tag(Animal.dog)
+      }
+      .tabViewStyle(.page(indexDisplayMode: .always))
+      .screenDetached
+//    }
   }
 }
 
@@ -75,5 +77,5 @@ struct SwitchNestedPage: View {
 }
 
 #Preview {
-  SwitchNestedPage()
+  PetsCarousel()
 }

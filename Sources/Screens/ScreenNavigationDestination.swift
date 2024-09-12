@@ -28,9 +28,6 @@ struct ScreenNavigationDestinationModifier: ViewModifier {
           appeared = true
           controller.hasNavigationDestination = true
         }
-        if !skip {
-          controller.onNavigationDestinationAppear()
-        }
       }
   }
 }
